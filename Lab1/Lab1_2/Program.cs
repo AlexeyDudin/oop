@@ -32,7 +32,7 @@ namespace Lab1_2
                 if (decimalValueOfChar >= notationIntValue)
                     return ResultEnums.CommandLine | ResultEnums.NotationOutOfRangeException;
             }
-            return ResultEnums.None;
+            return ResultEnums.Ok;
         }
 
         private static ResultEnums CheckParam(string[] args)
@@ -106,7 +106,7 @@ namespace Lab1_2
             {
                 ResultEnums resultCheckParam = CheckParam(args);
 
-                if (resultCheckParam != ResultEnums.None)
+                if (resultCheckParam != ResultEnums.Ok)
                     return (int)resultCheckParam;
 
                 string inputValue = args[2].ToUpper();
@@ -121,7 +121,7 @@ namespace Lab1_2
                 return (int)(ResultEnums.ValueOutOfRangeException | ResultEnums.CommandLine);
             }
 
-            return (int)ResultEnums.None;
+            return (int)ResultEnums.Ok;
         }
     }
 }

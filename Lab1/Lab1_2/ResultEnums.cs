@@ -3,7 +3,7 @@
     //Битовое представление ошибок
     public enum ResultEnums
     {
-        None = 0,
+        Ok = 0,
         GetHelp = 0b1,
         CommandLine = 0b10,
         ErrorConvertToIntException = 0b100,
