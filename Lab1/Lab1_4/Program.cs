@@ -28,7 +28,7 @@ namespace Lab1_4
             if (!File.Exists(args[1]))
             {
                 Console.WriteLine($"Ошибка параметров командной строки! Файл {args[1]} не найден");
-                return ResultEnums.ArgumentException | ResultEnums.FileNotFound;
+                return ResultEnums.ArgumentException | ResultEnums.WorkWithFileError;
             }
 
             return ResultEnums.Ok;
@@ -118,17 +118,30 @@ namespace Lab1_4
             if (resultCheckParam != ResultEnums.Ok)
                 return (int)resultCheckParam;
 
-            if (File.Exists(args[2]))
-                File.Delete(args[2]);
-
-            switch (args[0])
+            try
             {
-                case "pack":
-                    Compress(args[1], args[2]);
-                    break;
-                case "unpack":
-                    UnCompress(args[1], args[2]);
-                    break;
+                if (File.Exists(args[2]))
+                    File.Delete(args[2]);
+
+                switch (args[0])
+                {
+                    case "pack":
+                        Compress(args[1], args[2]);
+                        break;
+                    case "unpack":
+                        UnCompress(args[1], args[2]);
+                        break;
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine($"Ошибка при работе с файлом\n{e.Message}\n{string.Join("<-", e.Data)}");
+                return (int)ResultEnums.WorkWithFileError;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{e.Message}\n{string.Join("<-", e.Data)}");
+                return (int)ResultEnums.OtherExceptions;
             }
 
             return (int)ResultEnums.Ok;
