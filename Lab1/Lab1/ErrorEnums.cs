@@ -7,7 +7,7 @@
     //00000100 - Ошибка записи в файл
     public enum ErrorEnums
     {
-        None = 0,
+        Ok = 0,
         CommandLine = 0b1,
         ReadFile = 0b10,
         WriteFile = 0b100,

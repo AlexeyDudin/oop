@@ -9,25 +9,9 @@ namespace Lab1
         {
             Console.WriteLine("Lab1_1.exe <input file> <output file> <search string> <replace string>");
         }
-        public static int Main(string[] args)
-        {
-            if (args.Length == 1 && (args[0].ToLower() == "-h" || args[0] == "/?"))
-            {
-                PrintHelp();
-                return (int)ErrorEnums.None;
-            }
-            if (args.Length != 4)
-            {
-                Console.WriteLine("Ошибка параметров командной строки!");
-                PrintHelp();
-                return (int)ErrorEnums.CommandLine;
-            }
-            if (!File.Exists(args[0]))
-            {
-                Console.WriteLine($"Файл {args[0]} не существует");
-                return (int)ErrorEnums.ReadFile;
-            }
 
+        public static ErrorEnums FileWorking(string[] args)
+        {
             //Удаляем выходной файл, если он существует
             if (File.Exists(args[1]))
             {
@@ -52,7 +36,7 @@ namespace Lab1
                 while ((readedString = streamReader.ReadLine()) != null)
                 {
                     string recievedString;
-                    if (readedString.Contains(args[2]))
+                    if (readedString.Contains(args[2]) && !string.IsNullOrEmpty(args[2]))
                     {
                         isFoundSearchedString = true;
                         recievedString = readedString.Replace(args[2], args[3]);
@@ -68,20 +52,50 @@ namespace Lab1
                 inputFileStream.Close();
                 outputFileStream.Close();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
-                return (int)ErrorEnums.InputOutputExceptions;
+                return ErrorEnums.InputOutputExceptions;
             }
 
             //Было ли вхождение хоть одной искомой строки
             if (!isFoundSearchedString)
             {
                 Console.WriteLine("Не найдена ни одна искомая строка");
-                return (int)ErrorEnums.NoSearchString;
+                return ErrorEnums.NoSearchString;
             }
 
-            return (int)ErrorEnums.None;
+            return ErrorEnums.Ok;
+        }
+
+        public static ErrorEnums CheckParams(string[] args)
+        {
+            if (args.Length == 1 && (args[0].ToLower() == "-h" || args[0] == "/?"))
+            {
+                PrintHelp();
+                return ErrorEnums.Ok;
+            }
+            if (args.Length != 4)
+            {
+                Console.WriteLine("Ошибка параметров командной строки!");
+                PrintHelp();
+                return ErrorEnums.CommandLine;
+            }
+            if (!File.Exists(args[0]))
+            {
+                Console.WriteLine($"Файл {args[0]} не существует");
+                return ErrorEnums.ReadFile;
+            }
+            return ErrorEnums.Ok;
+        }
+
+        public static int Main(string[] args)
+        {
+            ErrorEnums resultCheckParam = CheckParams(args);
+            if (resultCheckParam != ErrorEnums.Ok)
+                return (int)resultCheckParam;
+
+            return (int)FileWorking(args);
         }
     }
 }
