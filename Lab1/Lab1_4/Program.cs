@@ -52,7 +52,10 @@ namespace Lab1_4
                 {
                     if (Byte.MaxValue - counter < 1)
                     {
-                        throw new IndexOutOfRangeException($"Произошло переполнение! Количество повторных байт {readedByte} превышает значение 255");
+                        streamReader.Close();
+                        inputFileStream.Close();
+                        outputFileStream.Close();
+                        throw new IndexOutOfRangeException($"Произошло переполнение! Количество повторных байт {(char)readedByte} превышает значение 255");
                     }
                     counter++;
                 }
@@ -132,6 +135,19 @@ namespace Lab1_4
                         UnCompress(args[1], args[2]);
                         break;
                 }
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine(e.Message);
+                try
+                {
+                    File.Delete(args[1]);
+                }
+                catch
+                {
+                    Console.WriteLine($"Ошибка удаления файла {args[1]}");
+                }
+                return (int)ResultEnums.WorkWithFileError;
             }
             catch (IOException e)
             {

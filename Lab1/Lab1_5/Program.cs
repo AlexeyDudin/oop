@@ -6,11 +6,16 @@ namespace Lab1_5
 {
     public class Program
     {
+        private static void PrintHelp()
+        {
+            Console.WriteLine("Lab1_5.exe <input file> <output file>");
+        }
         private static StatusEnums CheckArgs(string[] args)
         {
             if (args.Length != 2)
             {
                 Console.WriteLine("Ошибка в аргументах командной строки");
+                PrintHelp();
                 return StatusEnums.ArgumentError;
             }
 

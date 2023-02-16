@@ -21,7 +21,7 @@ namespace Lab1_3
 
             if (!File.Exists(args[0]))
             {
-                Console.WriteLine("Ошибка параметров командной строки");
+                Console.WriteLine($"Ошибка параметров командной строки. Файл {args[0]} не найден");
                 return ResultEnums.ArgumentException | ResultEnums.FileNotFound;
             }
 
@@ -31,6 +31,8 @@ namespace Lab1_3
         private static int[][] ReadMatrixFromFile(string fileName)
         {
             string[] readedStringsFromFile = File.ReadAllLines(fileName);
+            if (readedStringsFromFile.Length != 3)
+                throw new ArgumentException("Размер матрицы в файле не соответствует размеру 3x3");
             int[][] result = new int[readedStringsFromFile.Length][];
             for (int i = 0; i < readedStringsFromFile.Length; i++)
             {
@@ -41,6 +43,8 @@ namespace Lab1_3
             foreach (string line in readedStringsFromFile)
             {
                 string[] elementsInString = line.Split(' ');
+                if (elementsInString.Length != 3)
+                    throw new ArgumentException($"Размер матрицы в файле не соответствует размеру 3x3. Ошибка в строке {counterLines}");
                 foreach (string elementString in elementsInString)
                 {
                     result[counterLines][counterElements] = Int32.Parse(elementString);
@@ -70,13 +74,6 @@ namespace Lab1_3
         }
         private static int GetMatrixDeterminant(int[][] readedMatrix)
         {
-            //int[] resultMatrix = new int[3];
-
-            //resultMatrix[0] = readedMatrix[0][0] * (readedMatrix[1][1] * readedMatrix[2][2] - readedMatrix[1][2] * readedMatrix[2][1]);
-            //resultMatrix[1] = readedMatrix[0][1] * -(readedMatrix[1][0] * readedMatrix[2][2] - readedMatrix[2][0] * readedMatrix[2][1]);
-            //resultMatrix[2] = readedMatrix[0][2] * (readedMatrix[0][1] * readedMatrix[2][1] - readedMatrix[2][0] * readedMatrix[1][1]);
-
-            //int result = resultMatrix[0] - resultMatrix[1] + resultMatrix[2];
             int result = readedMatrix[0][0] * readedMatrix[1][1] * readedMatrix[2][2] + readedMatrix[1][0] * readedMatrix[2][1] * readedMatrix[0][2] + readedMatrix[0][1] * readedMatrix[1][2] * readedMatrix[2][0] -
                          readedMatrix[2][0] * readedMatrix[1][1] * readedMatrix[0][2] - readedMatrix[0][0] * readedMatrix[2][1] * readedMatrix[1][2] - readedMatrix[1][0] * readedMatrix[0][1] * readedMatrix[2][2];
             if (result == 0)
@@ -110,17 +107,30 @@ namespace Lab1_3
             if (resultCheckParam != ResultEnums.Ok)
                 return (int)resultCheckParam;
 
-            int[][] readedMatrix = ReadMatrixFromFile(args[0]);
+            try
+            {
+                int[][] readedMatrix = ReadMatrixFromFile(args[0]);
+                int matrixDeterminant = GetMatrixDeterminant(readedMatrix); //Выдает ArgumentException при детерминанте = 0;
+                int[][] transporedMatrix = TransporateMatrix(readedMatrix);
+                int[][] determinantMatrix = GetFullMatrixDeterminant(transporedMatrix);
 
-            int matrixDeterminant = GetMatrixDeterminant(readedMatrix);
-            int[][] transporedMatrix = TransporateMatrix(readedMatrix);
-            int[][] determinantMatrix = GetFullMatrixDeterminant(transporedMatrix);
+                float coefficient = (1 / matrixDeterminant);
 
-            float coefficient = (1 / matrixDeterminant);
+                float[][] result = Multiplex(determinantMatrix, coefficient);
 
-            float[][] result = Multiplex(determinantMatrix, coefficient);
-
-            PrintResult(result);
+                PrintResult(result);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+                return (int)ResultEnums.ArgumentException;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return (int)ResultEnums.FileWorkException;
+            }
+            
             return (int)ResultEnums.Ok;
         }
 
@@ -130,7 +140,7 @@ namespace Lab1_3
             {
                 for (int j = 0; j < result[i].Length; j++)
                 {
-                    Console.Write(result[i][j] + "\t");
+                    Console.Write(result[i][j].ToString("0.000") + "\t");
                 }
                 Console.WriteLine();
             }
