@@ -30,6 +30,7 @@ namespace Lab1_3
 
         private static int[][] ReadMatrixFromFile(string fileName)
         {
+            //В английском языке нет слова readed. read!! а не readed
             string[] readedStringsFromFile = File.ReadAllLines(fileName);
             if (readedStringsFromFile.Length != 3)
                 throw new ArgumentException("Размер матрицы в файле не соответствует размеру 3x3");
@@ -38,10 +39,13 @@ namespace Lab1_3
             {
                 result[i] = new int[readedStringsFromFile.Length];
             }
+
+            //line counter; element counter -> row column
             int counterLines = 0;
             int counterElements = 0;
             foreach (string line in readedStringsFromFile)
             {
+                //проверка на много символов
                 string[] elementsInString = line.Split(' ');
                 if (elementsInString.Length != 3)
                     throw new ArgumentException($"Размер матрицы в файле не соответствует размеру 3x3. Ошибка в строке {counterLines}");
@@ -53,8 +57,12 @@ namespace Lab1_3
                 counterElements = 0;
                 counterLines++;
             }
+
             return result;
         }
+
+        //Правильное наименование функции - Transpose
+        //readedMatrix имеет другой контекст. Переименовать -> matrix
         private static int[][] TransporateMatrix(int[][] readedMatrix)
         {
             int[][] result = new int[readedMatrix.Length][];
@@ -72,16 +80,25 @@ namespace Lab1_3
             }
             return result;
         }
+        
+        //120 символов MAX - Done
         private static int GetMatrixDeterminant(int[][] readedMatrix)
         {
-            int result = readedMatrix[0][0] * readedMatrix[1][1] * readedMatrix[2][2] + readedMatrix[1][0] * readedMatrix[2][1] * readedMatrix[0][2] + readedMatrix[0][1] * readedMatrix[1][2] * readedMatrix[2][0] -
-                         readedMatrix[2][0] * readedMatrix[1][1] * readedMatrix[0][2] - readedMatrix[0][0] * readedMatrix[2][1] * readedMatrix[1][2] - readedMatrix[1][0] * readedMatrix[0][1] * readedMatrix[2][2];
+            int result = readedMatrix[0][0] * readedMatrix[1][1] * readedMatrix[2][2] +
+                         readedMatrix[1][0] * readedMatrix[2][1] * readedMatrix[0][2] + 
+                         readedMatrix[0][1] * readedMatrix[1][2] * readedMatrix[2][0] -
+                         readedMatrix[2][0] * readedMatrix[1][1] * readedMatrix[0][2] -
+                         readedMatrix[0][0] * readedMatrix[2][1] * readedMatrix[1][2] - 
+                         readedMatrix[1][0] * readedMatrix[0][1] * readedMatrix[2][2];
             if (result == 0)
                 throw new ArgumentException("Для текущей матрицы не существует определителя!");
             return result;
         }
 
-        private static int[][] GetFullMatrixDeterminant(int[][] transporedMatrix)
+        //transposed 
+        //GetCofactorMatrix
+        //Параметр функции здесь имеет другой контекст. Переименовать
+        private static int[][] GetMatrixCofactor(int[][] transporedMatrix)
         {
             int[][] result = new int[transporedMatrix.Length][];
             for (int i = 0; i < transporedMatrix.Length; i++)
@@ -101,39 +118,7 @@ namespace Lab1_3
             return result;
         }
 
-        public static int Main(string[] args)
-        {
-            ResultEnums resultCheckParam = CheckParams(args);
-            if (resultCheckParam != ResultEnums.Ok)
-                return (int)resultCheckParam;
-
-            try
-            {
-                int[][] readedMatrix = ReadMatrixFromFile(args[0]);
-                int matrixDeterminant = GetMatrixDeterminant(readedMatrix); //Выдает ArgumentException при детерминанте = 0;
-                int[][] transporedMatrix = TransporateMatrix(readedMatrix);
-                int[][] determinantMatrix = GetFullMatrixDeterminant(transporedMatrix);
-
-                float coefficient = (1 / matrixDeterminant);
-
-                float[][] result = Multiplex(determinantMatrix, coefficient);
-
-                PrintResult(result);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-                return (int)ResultEnums.ArgumentException;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return (int)ResultEnums.FileWorkException;
-            }
-            
-            return (int)ResultEnums.Ok;
-        }
-
+        //Переименовать в PrintMatrix
         private static void PrintResult(float[][] result)
         {
             for (int i = 0; i < result.Length; i++)
@@ -146,7 +131,8 @@ namespace Lab1_3
             }
         }
 
-        private static float[][] Multiplex(int[][] determinantMatrix, float matrixDeterminant)
+        //Переименовать функцию и параметры arguments by scalar
+        private static float[][] MultiplyMatrix(int[][] determinantMatrix, float matrixDeterminant)
         {
             float[][] result = new float[determinantMatrix.Length][];
             for (int i = 0; i < determinantMatrix.Length; i++)
@@ -164,5 +150,41 @@ namespace Lab1_3
 
             return result;
         }
+
+        public static int Main(string[] args)
+        {
+            ResultEnums resultCheckParam = CheckParams(args);
+            if (resultCheckParam != ResultEnums.Ok)
+                return (int)resultCheckParam;
+
+            try
+            {
+                //вывести в функцию
+                //заменить int на float double
+                int[][] readedMatrix = ReadMatrixFromFile(args[0]);
+                int matrixDeterminant = GetMatrixDeterminant(readedMatrix); //Выдает ArgumentException при детерминанте = 0;
+                int[][] transporedMatrix = TransporateMatrix(readedMatrix);
+                int[][] cofactorMatrix = GetMatrixCofactor(transporedMatrix);
+
+                float coefficient = (1 / matrixDeterminant);
+
+                float[][] result = MultiplyMatrix(cofactorMatrix, coefficient);
+
+                PrintResult(result);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);
+                return (int)ResultEnums.ArgumentException;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return (int)ResultEnums.FileWorkException;
+            }
+            
+            return (int)ResultEnums.Ok;
+        }
+
     }
 }

@@ -10,52 +10,51 @@ namespace Lab1
             Console.WriteLine("Lab1_1.exe <input file> <output file> <search string> <replace string>");
         }
 
-        public static ErrorEnums FileWorking(string[] args)
+        public static ErrorEnums FileWorking(string inputFile, string outputFile, string strToChange, string newString)
         {
             //Удаляем выходной файл, если он существует
-            if (File.Exists(args[1]))
+            if (File.Exists(outputFile))
             {
-                File.Delete(args[1]);
+                File.Delete(outputFile);
             }
 
             //Переменная для отслеживания, была ли найдена хотя-бы одна искомая строка
             bool isFoundSearchedString = false;
-
-            try
+            
+            using (var inputFileStream = File.OpenRead(inputFile) )
             {
-                //Открываем файлы через файловые потоки
-                FileStream inputFileStream = File.OpenRead(args[0]);
-                FileStream outputFileStream = File.OpenWrite(args[1]);
-
-                //Считыватель и запись из/в файловые потоки
-                StreamReader streamReader = new StreamReader(inputFileStream);
-                StreamWriter streamWriter = new StreamWriter(outputFileStream);
-
-                string readedString;
-                //Пока можем считать из файла строку
-                while ((readedString = streamReader.ReadLine()) != null)
+                using (var outputFileStream = File.OpenWrite(outputFile))
                 {
-                    string recievedString;
-                    if (readedString.Contains(args[2]) && !string.IsNullOrEmpty(args[2]))
+                    //Считыватель и запись из/в файловые потоки
+                    using (var streamReader = new StreamReader(inputFileStream))
                     {
-                        isFoundSearchedString = true;
-                        recievedString = readedString.Replace(args[2], args[3]);
+                        using (StreamWriter streamWriter = new StreamWriter(outputFileStream))
+                        {
+                            try
+                            {
+                                string readString;
+                                //Пока можем считать из файла строку
+                                while ((readString = streamReader.ReadLine()) != null)
+                                {
+                                    string recieveString;
+                                    if (!string.IsNullOrEmpty(strToChange) && readString.Contains(strToChange))
+                                    {
+                                        isFoundSearchedString = true;
+                                        recieveString = readString.Replace(strToChange, newString);
+                                    }
+                                    else
+                                        recieveString = readString;
+                                    streamWriter.WriteLine(recieveString);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Ошибка при работе с файлом.\n{e.Message}");
+                                return ErrorEnums.InputOutputExceptions;
+                            }
+                        }
                     }
-                    else
-                        recievedString = readedString;
-                    streamWriter.WriteLine(recievedString);
                 }
-
-                //Закрываем управление потоками
-                streamReader.Close();
-                streamWriter.Close();
-                inputFileStream.Close();
-                outputFileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-                return ErrorEnums.InputOutputExceptions;
             }
 
             //Было ли вхождение хоть одной искомой строки
@@ -95,7 +94,7 @@ namespace Lab1
             if (resultCheckParam != ErrorEnums.Ok)
                 return (int)resultCheckParam;
 
-            return (int)FileWorking(args);
+            return (int)FileWorking(args[0], args[1], args[2], args[3]);
         }
     }
 }

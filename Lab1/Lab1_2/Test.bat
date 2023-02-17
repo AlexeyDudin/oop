@@ -1,16 +1,14 @@
-ο»Ώ.\Lab1_2.exe
-@echo %errorlevel%
-@pause
+@call .\Lab1_2.exe
+@IF NOT %errorlevel% 2 GOTO endErr
 
-.\Lab1_2.exe -h
-@echo %errorlevel%
-@pause
+@call .\Lab1_2.exe -h
+@IF NOT %errorlevel% 1 GOTO endErr
 
-.\Lab1_2.exe 1 2 12
-@echo %errorlevel%
-@pause
+@call .\Lab1_2.exe 1 2 12
+@if NOT %errorlevel% 8 GOTO endErr
 
-.\Lab1_2.exe 2 1 12
+@call .\Lab1_2.exe 2 1 12 >> tmp
+@rem fc tmp ethalon_file
 @echo %errorlevel%
 @pause
 
@@ -41,3 +39,10 @@
 .\Lab1_2.exe 10 2 0
 @echo %errorlevel%
 @pause
+
+:endErr
+@echo "θ¨΅ª  Ά β¥αβ¥!"
+@goto end
+
+:end
+pause

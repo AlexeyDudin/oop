@@ -1,3 +1,4 @@
+@rem сделать проверку с эталоном
 .\Lab1_3.exe
 @echo %errorlevel%
 @pause

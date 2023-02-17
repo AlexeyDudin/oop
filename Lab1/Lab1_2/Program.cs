@@ -28,7 +28,7 @@ namespace Lab1_2
             int notationIntValue = Int32.Parse(sourceNotation);
             for (int i = 0; i < value.Length; i++)
             {
-                int decimalValueOfChar = GetDecimalValueOf(value[i]);
+                int decimalValueOfChar = GetDigitValueOf(value[i]);
                 if (decimalValueOfChar >= notationIntValue)
                 {
                     Console.WriteLine($"Ошибка в параметре value. Превышен диапазон значений исходной нотации\n<source notation> = {sourceNotation}\n<value> = {value}");
@@ -79,7 +79,7 @@ namespace Lab1_2
             return CheckValueOnNotationException(args[0], args[2]);
         }
 
-        private static int GetDecimalValueOf(char character)
+        private static int GetDigitValueOf(char character)
         {
             for (int i = 0; i < valuesArray.Length; i++)
             {
@@ -91,69 +91,52 @@ namespace Lab1_2
             throw new ArgumentOutOfRangeException($"Ошибка параметров командной строки! Символ {character} не поддерживается!");
         }
 
-        private static int ConvertToDecimal(string inputValue, int sourceNotation)
+
+        private static int ConvertToInteger(string inputValue, int sourceNotation)
         {
             int result = 0;
             bool isValueNegative = false;
-            bool isNeedMultiplyOnMinus = false;
-            for (int i = 0; i < inputValue.Length; i++)
+            foreach (char character in inputValue)
             {
-                if (inputValue[i] != '-')
+                if (character != '-')
                 {
-                    int calculatedIterationValue = GetDecimalValueOf(inputValue[i]) * (int)Math.Pow(sourceNotation, inputValue.Length - 1 - i);
-                    if (calculatedIterationValue < 0)
-                        isValueNegative = true;
-
-                    //TODO выход за диапазон Int32
                     if (isValueNegative)
                     {
-                        if (Int32.MinValue - result > calculatedIterationValue)
+                        if (Int32.MinValue - (result * 10) > GetDigitValueOf(character))
                             throw new ArgumentOutOfRangeException($"Ошибка! Превышено значение Int32 {Int32.MinValue}");
+                        result = result * 10 - GetDigitValueOf(character);
                     }
                     else
                     {
-                        if ((Int32.MaxValue - result) < calculatedIterationValue)
-                            throw new ArgumentOutOfRangeException($"Ошибка! Превышено значение Int32 {Int32.MaxValue}");
+                        if (Int32.MaxValue - (result * 10) < GetDigitValueOf(character))
+                        {
+                            throw new ArgumentOutOfRangeException($"Ошибка! Превышено значение Int32 {Int32.MinValue}");
+                        }
+                        result = result * 10 + GetDigitValueOf(character);
                     }
-
-                    if (isNeedMultiplyOnMinus)
-                        result -= calculatedIterationValue;
-                    else
-                        result += calculatedIterationValue;
                 }
                 else
                 {
                     isValueNegative = true;
-                    isNeedMultiplyOnMinus = true;
                 }
             }
             return result;
         }
 
-        private static string ConvertToDestinationNotation(int decimalValue, int destinationNotation)
+        private static string ConvertToString(int decimalValue, int destinationNotation)
         {
             string result = "";
-            long changedDecimalValue = decimalValue;
-            bool isValueNegative = false;
-            if (changedDecimalValue < 0)
+            long changedIntegerValue = decimalValue;
+            if (decimalValue < 0)
             {
-                isValueNegative = true;
-                changedDecimalValue = UInt32.MaxValue + changedDecimalValue + 1;
+                changedIntegerValue = UInt32.MaxValue + changedIntegerValue + 1;
             }
-            if (changedDecimalValue == 0)
+            if (changedIntegerValue == 0)
                 return "0";
-            while (changedDecimalValue != 0)
+            while (changedIntegerValue != 0)
             {
-                if (isValueNegative)
-                {
-                    var temporary = (changedDecimalValue) % destinationNotation;
-                    if (temporary < 0)
-                        temporary = destinationNotation + temporary;
-                    result = valuesArray[temporary] + result;
-                }
-                else
-                    result = valuesArray[changedDecimalValue % destinationNotation] + result;
-                changedDecimalValue = changedDecimalValue / destinationNotation;
+                result = valuesArray[changedIntegerValue % destinationNotation] + result;
+                changedIntegerValue = changedIntegerValue / destinationNotation;
             }
             return result;
         }
@@ -170,8 +153,8 @@ namespace Lab1_2
 
                 string inputValue = args[2].ToUpper();
 
-                int decimalValue = ConvertToDecimal(inputValue, Int32.Parse(args[0]));
-                string resultValue = ConvertToDestinationNotation(decimalValue, Int32.Parse(args[1]));
+                int decimalValue = ConvertToInteger(inputValue, Int32.Parse(args[0]));
+                string resultValue = ConvertToString(decimalValue, Int32.Parse(args[1]));
                 Console.WriteLine(resultValue);
             }
             catch (ArgumentOutOfRangeException ex)
