@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 
 namespace Lab1_3
@@ -101,6 +102,7 @@ namespace Lab1_3
         private static int[][] GetMatrixCofactor(int[][] transporedMatrix)
         {
             int[][] result = new int[transporedMatrix.Length][];
+            Assert.AreEqual(transporedMatrix.Length, 3);
             for (int i = 0; i < transporedMatrix.Length; i++)
             {
                 result[i] = new int[transporedMatrix.Length];
