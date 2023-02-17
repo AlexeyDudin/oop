@@ -1,18 +1,23 @@
 @rem Ошибка параметров командной строки
-@call .\Lab1.exe 
+@call .\Lab1.exe > tmp.txt
 @IF NOT errorlevel 1 goto endErr
-@call .\Lab1.exe 1.txt
+@fc .\tmp.txt .\EthalonBadCommand.txt
+@call .\Lab1.exe 1.txt > tmp.txt
 @IF NOT errorlevel 1 goto endErr
-@call .\Lab1.exe 1.txt 2.txt 3.txt 111 222
+@fc .\tmp.txt .\EthalonBadCommand.txt
+@call .\Lab1.exe 1.txt 2.txt 3.txt 111 222 > tmp.txt
 @IF NOT errorlevel 1 goto endErr
+@fc .\tmp.txt .\EthalonBadCommand.txt
 
 @rem Ошибка открытия файла
-@call .\Lab1.exe 11.txt 2.txt 11 123
+@call .\Lab1.exe 11.txt 2.txt 11 123 > tmp.txt
 @IF NOT errorlevel 2 goto endErr
+@fc .\tmp.txt .\EthalonBadOpenFile.txt
 
 @rem Не существующая подстрока в строке
-@call .\Lab1.exe 1.txt out.txt qqq 1q2w
+@call .\Lab1.exe 1.txt out.txt qqq 1q2w > tmp.txt
 @IF NOT errorlevel 8 goto endErr
+@fc .\tmp.txt .\EthalonNoSearchString.txt
 
 @rem Замена с рекурсией 
 @call .\Lab1.exe 1.txt out.txt ма мама

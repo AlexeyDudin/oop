@@ -1,0 +1,2 @@
+Ошибка параметров командной строки!
+Lab1_1.exe <input file> <output file> <search string> <replace string>

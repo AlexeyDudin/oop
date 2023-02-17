@@ -10,7 +10,7 @@ namespace Lab1
             Console.WriteLine("Lab1_1.exe <input file> <output file> <search string> <replace string>");
         }
 
-        public static ErrorEnums FileWorking(string inputFile, string outputFile, string strToChange, string newString)
+        public static ErrorEnums HandleFile(string inputFile, string outputFile, string stringToChange, string newString)
         {
             //Удаляем выходной файл, если он существует
             if (File.Exists(outputFile))
@@ -37,10 +37,10 @@ namespace Lab1
                                 while ((readString = streamReader.ReadLine()) != null)
                                 {
                                     string recieveString;
-                                    if (!string.IsNullOrEmpty(strToChange) && readString.Contains(strToChange))
+                                    if (!string.IsNullOrEmpty(stringToChange) && readString.Contains(stringToChange))
                                     {
                                         isFoundSearchedString = true;
-                                        recieveString = readString.Replace(strToChange, newString);
+                                        recieveString = readString.Replace(stringToChange, newString);
                                     }
                                     else
                                         recieveString = readString;
@@ -94,7 +94,7 @@ namespace Lab1
             if (resultCheckParam != ErrorEnums.Ok)
                 return (int)resultCheckParam;
 
-            return (int)FileWorking(args[0], args[1], args[2], args[3]);
+            return (int)HandleFile(args[0], args[1], args[2], args[3]);
         }
     }
 }
