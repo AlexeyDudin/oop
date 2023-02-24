@@ -29,30 +29,34 @@ namespace Lab1_3
             return ResultEnums.Ok;
         }
 
-        private static int[][] ReadMatrixFromFile(string fileName)
+        private static float[][] ReadMatrixFromFile(string fileName)
         {
             //В английском языке нет слова readed. read!! а не readed
-            string[] readedStringsFromFile = File.ReadAllLines(fileName);
-            if (readedStringsFromFile.Length != 3)
-                throw new ArgumentException("Размер матрицы в файле не соответствует размеру 3x3");
-            int[][] result = new int[readedStringsFromFile.Length][];
-            for (int i = 0; i < readedStringsFromFile.Length; i++)
+            string[] readStringsFromFile = File.ReadAllLines(fileName);
+            Assert.AreEqual(3, readStringsFromFile.Length);
+            //if (readStringsFromFile.Length != 3)
+            //    throw new ArgumentException("Размер матрицы в файле не соответствует размеру 3x3");
+            float[][] result = new float[readStringsFromFile.Length][];
+            for (int i = 0; i < readStringsFromFile.Length; i++)
             {
-                result[i] = new int[readedStringsFromFile.Length];
+                result[i] = new float[readStringsFromFile.Length];
             }
 
             //line counter; element counter -> row column
             int counterLines = 0;
             int counterElements = 0;
-            foreach (string line in readedStringsFromFile)
+            foreach (string line in readStringsFromFile)
             {
                 //проверка на много символов
                 string[] elementsInString = line.Split(' ');
-                if (elementsInString.Length != 3)
-                    throw new ArgumentException($"Размер матрицы в файле не соответствует размеру 3x3. Ошибка в строке {counterLines}");
+                Assert.AreEqual(3, elementsInString.Length);
+                //if (elementsInString.Length != 3)
+                //    throw new ArgumentException($"Размер матрицы в файле не соответствует размеру 3x3. Ошибка в строке {counterLines}");
                 foreach (string elementString in elementsInString)
                 {
-                    result[counterLines][counterElements] = Int32.Parse(elementString);
+                    //result[counterLines][counterElements] = Int32.Parse(elementString);
+                    bool canConvert = float.TryParse(elementString, out result[counterLines][counterElements]);
+                    Assert.IsTrue(canConvert);
                     counterElements++;
                 }
                 counterElements = 0;
@@ -64,28 +68,28 @@ namespace Lab1_3
 
         //Правильное наименование функции - Transpose
         //readedMatrix имеет другой контекст. Переименовать -> matrix
-        private static int[][] TransporateMatrix(int[][] readedMatrix)
+        private static float[][] GetTransposedMatrix(float[][] inputMatrix)
         {
-            int[][] result = new int[readedMatrix.Length][];
-            for (int i = 0; i < readedMatrix.Length; i++)
+            float[][] result = new float[inputMatrix.Length][];
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                result[i] = new int[readedMatrix.Length];
+                result[i] = new float[inputMatrix.Length];
             }
 
-            for (int i = 0; i < readedMatrix.Length; i++)
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                for (int j = 0; j < readedMatrix[i].Length; j++)
+                for (int j = 0; j < inputMatrix[i].Length; j++)
                 {
-                    result[i][j] = readedMatrix[j][i];
+                    result[i][j] = inputMatrix[j][i];
                 }
             }
             return result;
         }
         
         //120 символов MAX - Done
-        private static int GetMatrixDeterminant(int[][] readedMatrix)
+        private static float GetMatrixDeterminant(float[][] readedMatrix)
         {
-            int result = readedMatrix[0][0] * readedMatrix[1][1] * readedMatrix[2][2] +
+            float result = readedMatrix[0][0] * readedMatrix[1][1] * readedMatrix[2][2] +
                          readedMatrix[1][0] * readedMatrix[2][1] * readedMatrix[0][2] + 
                          readedMatrix[0][1] * readedMatrix[1][2] * readedMatrix[2][0] -
                          readedMatrix[2][0] * readedMatrix[1][1] * readedMatrix[0][2] -
@@ -99,57 +103,69 @@ namespace Lab1_3
         //transposed 
         //GetCofactorMatrix
         //Параметр функции здесь имеет другой контекст. Переименовать
-        private static int[][] GetMatrixCofactor(int[][] transporedMatrix)
+        private static float[][] GetMatrixCofactor(float[][] inputMatrix)
         {
-            int[][] result = new int[transporedMatrix.Length][];
-            Assert.AreEqual(transporedMatrix.Length, 3);
-            for (int i = 0; i < transporedMatrix.Length; i++)
+            float[][] resultMatrixCofactor = new float[inputMatrix.Length][];
+            Assert.AreEqual(inputMatrix.Length, 3);
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                result[i] = new int[transporedMatrix.Length];
+                resultMatrixCofactor[i] = new float[inputMatrix.Length];
             }
-            result[0][0] = transporedMatrix[1][1] * transporedMatrix[2][2] - transporedMatrix[2][1] * transporedMatrix[1][2];
-            result[0][1] = -(transporedMatrix[1][0] * transporedMatrix[2][2] - transporedMatrix[2][0] * transporedMatrix[1][2]);
-            result[0][2] = transporedMatrix[1][0] * transporedMatrix[2][1] - transporedMatrix[2][0] * transporedMatrix[1][1];
-            result[1][0] = -(transporedMatrix[0][1] * transporedMatrix[2][2] - transporedMatrix[2][1] * transporedMatrix[0][2]);
-            result[1][1] = transporedMatrix[0][0] * transporedMatrix[2][2] - transporedMatrix[2][0] * transporedMatrix[0][2];
-            result[1][2] = -(transporedMatrix[0][0] * transporedMatrix[2][1] - transporedMatrix[2][0] * transporedMatrix[0][1]);
-            result[2][0] = transporedMatrix[0][1] * transporedMatrix[1][2] - transporedMatrix[1][1] * transporedMatrix[0][2];
-            result[2][1] = -(transporedMatrix[0][0] * transporedMatrix[1][2] - transporedMatrix[1][0] * transporedMatrix[0][2]);
-            result[2][2] = transporedMatrix[0][0] * transporedMatrix[1][1] - transporedMatrix[1][0] * transporedMatrix[0][1];
+            resultMatrixCofactor[0][0] = inputMatrix[1][1] * inputMatrix[2][2] - inputMatrix[2][1] * inputMatrix[1][2];
+            resultMatrixCofactor[0][1] = -(inputMatrix[1][0] * inputMatrix[2][2] - inputMatrix[2][0] * inputMatrix[1][2]);
+            resultMatrixCofactor[0][2] = inputMatrix[1][0] * inputMatrix[2][1] - inputMatrix[2][0] * inputMatrix[1][1];
+            resultMatrixCofactor[1][0] = -(inputMatrix[0][1] * inputMatrix[2][2] - inputMatrix[2][1] * inputMatrix[0][2]);
+            resultMatrixCofactor[1][1] = inputMatrix[0][0] * inputMatrix[2][2] - inputMatrix[2][0] * inputMatrix[0][2];
+            resultMatrixCofactor[1][2] = -(inputMatrix[0][0] * inputMatrix[2][1] - inputMatrix[2][0] * inputMatrix[0][1]);
+            resultMatrixCofactor[2][0] = inputMatrix[0][1] * inputMatrix[1][2] - inputMatrix[1][1] * inputMatrix[0][2];
+            resultMatrixCofactor[2][1] = -(inputMatrix[0][0] * inputMatrix[1][2] - inputMatrix[1][0] * inputMatrix[0][2]);
+            resultMatrixCofactor[2][2] = inputMatrix[0][0] * inputMatrix[1][1] - inputMatrix[1][0] * inputMatrix[0][1];
 
-            return result;
+            return resultMatrixCofactor;
         }
 
         //Переименовать в PrintMatrix
-        private static void PrintResult(float[][] result)
+        private static void PrintMatrix(float[][] inputMatrix)
         {
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                for (int j = 0; j < result[i].Length; j++)
+                for (int j = 0; j < inputMatrix[i].Length; j++)
                 {
-                    Console.Write(result[i][j].ToString("0.000") + "\t");
+                    Console.Write(inputMatrix[i][j].ToString("0.000") + "\t");
                 }
                 Console.WriteLine();
             }
         }
 
         //Переименовать функцию и параметры arguments by scalar
-        private static float[][] MultiplyMatrix(int[][] determinantMatrix, float matrixDeterminant)
+        private static float[][] MatrixMultiplication(float[][] inputMatrix, float multiplierFactor)
         {
-            float[][] result = new float[determinantMatrix.Length][];
-            for (int i = 0; i < determinantMatrix.Length; i++)
+            float[][] result = new float[inputMatrix.Length][];
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                result[i] = new float[determinantMatrix.Length];
+                result[i] = new float[inputMatrix.Length];
             }
 
-            for (int i = 0; i < determinantMatrix.Length; i++)
+            for (int i = 0; i < inputMatrix.Length; i++)
             {
-                for (int j = 0; j < determinantMatrix.Length; j++)
+                for (int j = 0; j < inputMatrix.Length; j++)
                 {
-                    result[i][j] = determinantMatrix[i][j] * matrixDeterminant;
+                    result[i][j] = inputMatrix[i][j] * multiplierFactor;
                 }
             }
 
+            return result;
+        }
+
+        public static float[][] GetInverseMatrix(float[][] inputMatrix)
+        {
+            float matrixDeterminant = GetMatrixDeterminant(inputMatrix); //Выдает ArgumentException при детерминанте = 0;
+            float[][] transporedMatrix = GetTransposedMatrix(inputMatrix);
+            float[][] cofactorMatrix = GetMatrixCofactor(transporedMatrix);
+
+            float coefficient = (1 / matrixDeterminant);
+
+            float[][] result = MatrixMultiplication(cofactorMatrix, coefficient);
             return result;
         }
 
@@ -163,16 +179,10 @@ namespace Lab1_3
             {
                 //вывести в функцию
                 //заменить int на float double
-                int[][] readedMatrix = ReadMatrixFromFile(args[0]);
-                int matrixDeterminant = GetMatrixDeterminant(readedMatrix); //Выдает ArgumentException при детерминанте = 0;
-                int[][] transporedMatrix = TransporateMatrix(readedMatrix);
-                int[][] cofactorMatrix = GetMatrixCofactor(transporedMatrix);
+                float[][] readedMatrix = ReadMatrixFromFile(args[0]);
+                float[][] inverseMatrix = GetInverseMatrix(readedMatrix);
 
-                float coefficient = (1 / matrixDeterminant);
-
-                float[][] result = MultiplyMatrix(cofactorMatrix, coefficient);
-
-                PrintResult(result);
+                PrintMatrix(inverseMatrix);
             }
             catch (ArgumentException e)
             {
