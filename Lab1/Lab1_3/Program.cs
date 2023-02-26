@@ -138,6 +138,7 @@ namespace Lab1_3
         }
 
         //Переименовать функцию и параметры arguments by scalar
+        //Переименовал функцию и параметры - Done
         private static float[][] MatrixMultiplication(float[][] inputMatrix, float multiplierFactor)
         {
             float[][] result = new float[inputMatrix.Length][];
@@ -177,8 +178,8 @@ namespace Lab1_3
 
             try
             {
-                //вывести в функцию
-                //заменить int на float double
+                //вывести в функцию - Done
+                //заменить int на float double - Done
                 float[][] readedMatrix = ReadMatrixFromFile(args[0]);
                 float[][] inverseMatrix = GetInverseMatrix(readedMatrix);
 
