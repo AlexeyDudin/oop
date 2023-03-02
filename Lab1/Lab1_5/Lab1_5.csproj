@@ -59,6 +59,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EthalonOutput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EthalonOutput2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EthalonOutput3.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="EthalonSample.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

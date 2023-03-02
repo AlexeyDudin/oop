@@ -142,12 +142,13 @@ namespace Lab1_5
 
         public static FieldEnums[][] FillFieldFromFile(string fileName)
         {
+            //initialize result
             FieldEnums[][] result = new FieldEnums[MAX_Y][];
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new FieldEnums[MAX_X];
             }
-            //Initialize
+            //Initialize with space
             for (int i = 0; i < result.Length; i++)
             {
                 for (int j = 0; j < result[i].Length; j++)
@@ -156,9 +157,10 @@ namespace Lab1_5
                 }
             }
 
-            string[] readedLines = File.ReadAllLines(fileName);
+            string[] readLines = File.ReadAllLines(fileName);
+
             int rowCounter = 0;
-            foreach (var line in readedLines)
+            foreach (var line in readLines)
             {
                 int positionCounter = 0;
                 foreach (var symbol in line)

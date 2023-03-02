@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Lab1_4
 {
@@ -36,83 +37,85 @@ namespace Lab1_4
 
         private static void Compress(string sourceFile, string destFile)
         {
-            FileStream inputFileStream = File.OpenRead(sourceFile);
-            FileStream outputFileStream = File.OpenWrite(destFile);
-
-            StreamReader streamReader = new StreamReader(inputFileStream);
-
-            byte counter = 0;
-            byte? prevByte = null;
-            byte? readedByte = null;
-
-            while (streamReader.Peek() >= 0)
+            using (FileStream inputFileStream = File.OpenRead(sourceFile), outputFileStream = File.OpenWrite(destFile))
             {
-                readedByte = (byte)streamReader.Read();
-                if (readedByte == prevByte)
+                using (StreamReader streamReader = new StreamReader(inputFileStream, Encoding.GetEncoding(866)))
                 {
-                    if (Byte.MaxValue - counter < 1)
+                    using (BinaryWriter binaryWriter = new BinaryWriter(outputFileStream, Encoding.GetEncoding(866)))
                     {
-                        streamReader.Close();
-                        inputFileStream.Close();
-                        outputFileStream.Close();
-                        throw new IndexOutOfRangeException($"Произошло переполнение! Количество повторных байт {(char)readedByte} превышает значение 255");
+
+                        byte counter = 0;
+                        char? prevCharacter = null;
+                        char? readChar = null;
+
+                        while (streamReader.Peek() >= 0)
+                        {
+                            string readString = streamReader.ReadToEnd();
+                            foreach (char currCharacter in readString)
+                            {
+                                readChar = currCharacter;
+                                if (currCharacter == prevCharacter)
+                                {
+                                    if (Byte.MaxValue - counter < 1)
+                                        throw new IndexOutOfRangeException($"Произошло переполнение! Количество повторных байт {currCharacter} превышает значение 255");
+
+                                    counter++;
+                                }
+                                else if (prevCharacter != null)
+                                {
+                                    binaryWriter.Write(counter);
+                                    binaryWriter.Write(prevCharacter.Value);
+                                    prevCharacter = currCharacter;
+                                    counter = 1;
+                                }
+                                else
+                                {
+                                    prevCharacter = currCharacter;
+                                    counter = 1;
+                                }
+                            }
+                        }
+
+                        //Записываем последний считаный байт
+                        if (readChar != null)
+                        {
+                            binaryWriter.Write(counter);
+                            binaryWriter.Write(readChar.Value);
+                        }
                     }
-                    counter++;
-                }
-                else if (prevByte != null)
-                {
-                    outputFileStream.WriteByte(counter);
-                    outputFileStream.WriteByte(prevByte.Value);
-                    prevByte = readedByte;
-                    counter = 1;
-                }
-                else
-                {
-                    prevByte = readedByte;
-                    counter = 1;
                 }
             }
-
-            if (readedByte != null)
-            {
-                outputFileStream.WriteByte(counter);
-                outputFileStream.WriteByte(readedByte.Value);
-            }
-
-            streamReader.Close();
-            inputFileStream.Close();
-            outputFileStream.Close();
         }
 
         private static void UnCompress(string sourceFile, string destFile)
         {
-            FileStream inputFileStream = File.OpenRead(sourceFile);
-            FileStream outputFileStream = File.OpenWrite(destFile);
-
-            StreamWriter streamWriter = new StreamWriter(outputFileStream);
-
-            bool isEndOfFile = false;
-
-            while (!isEndOfFile)
+            using (FileStream inputFileStream = File.OpenRead(sourceFile), outputFileStream = File.OpenWrite(destFile))
             {
-                if (inputFileStream.Position == inputFileStream.Length)
-                    isEndOfFile = true;
-                else
+                using (BinaryReader binaryReader = new BinaryReader(inputFileStream, Encoding.GetEncoding(866)))
                 {
-                    byte counter = (byte)inputFileStream.ReadByte();
-                    if (inputFileStream.Position == inputFileStream.Length)
-                        throw new EndOfStreamException($"Непредвиденный конец файла {sourceFile}");
-                    byte character = (byte)inputFileStream.ReadByte();
-                    for (byte i = 0; i < counter; i++)
+                    using (StreamWriter streamWriter = new StreamWriter(outputFileStream, Encoding.GetEncoding(866)))
                     {
-                        streamWriter.Write((char)character);
+                        bool isEndOfFile = false;
+
+                        while (!isEndOfFile)
+                        {
+                            if (binaryReader.PeekChar() == -1)
+                                isEndOfFile = true;
+                            else
+                            {
+                                byte counter = binaryReader.ReadByte();
+                                if (binaryReader.PeekChar() == -1)
+                                    throw new EndOfStreamException($"Непредвиденный конец файла {sourceFile}");
+                                char character = binaryReader.ReadChar();
+                                for (byte i = 0; i < counter; i++)
+                                {
+                                    streamWriter.Write(character);
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            streamWriter.Close();
-            inputFileStream.Close();
-            outputFileStream.Close();
         }
 
         public static int Main(string[] args)
