@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -23,25 +24,25 @@ namespace Lab1_5
 
         public List<Point> StartPoints { get; } = new List<Point>();
 
-        private void RecourciveFill()
-        {
-            if (CanFillPoint(CurrentPosition))
-            {
-                if (fieldEnums[CurrentPosition.Y][CurrentPosition.X] != FieldEnums.StartPosition)
-                {
-                    fieldEnums[CurrentPosition.Y][CurrentPosition.X] = FieldEnums.FillPoint;
-                }
-                CurrentPosition = CurrentPosition.Left;
-                RecourciveFill(); //Left
-                CurrentPosition = CurrentPosition.Rigth.Down;
-                RecourciveFill(); //Down
-                CurrentPosition = CurrentPosition.Up.Rigth;
-                RecourciveFill(); //Right
-                CurrentPosition = CurrentPosition.Left.Up;
-                RecourciveFill(); //Up
-                CurrentPosition = CurrentPosition.Down;
-            }
-        }
+        //private void RecourciveFill()
+        //{
+        //    if (CanFillPoint(CurrentPosition))
+        //    {
+        //        if (fieldEnums[CurrentPosition.Y][CurrentPosition.X] != FieldEnums.StartPosition)
+        //        {
+        //            fieldEnums[CurrentPosition.Y][CurrentPosition.X] = FieldEnums.FillPoint;
+        //        }
+        //        CurrentPosition = CurrentPosition.Left;
+        //        RecourciveFill(); //Left
+        //        CurrentPosition = CurrentPosition.Rigth.Down;
+        //        RecourciveFill(); //Down
+        //        CurrentPosition = CurrentPosition.Up.Rigth;
+        //        RecourciveFill(); //Right
+        //        CurrentPosition = CurrentPosition.Left.Up;
+        //        RecourciveFill(); //Up
+        //        CurrentPosition = CurrentPosition.Down;
+        //    }
+        //}
 
         private void CycledFill()
         {
@@ -51,61 +52,90 @@ namespace Lab1_5
             {
                 if (CanFillPoint(CurrentPosition))
                 {
-                    CycledFiledState state = new CycledFiledState();
-                    state.Point = CurrentPosition;
-                    direction = Direction.Left;
-                    state.Direction = direction;
-                    stateList.Add(state);
-                    if (fieldEnums[CurrentPosition.Y][CurrentPosition.X] != FieldEnums.StartPosition)
-                    {
-                        fieldEnums[CurrentPosition.Y][CurrentPosition.X] = FieldEnums.FillPoint;
-                    }
+                    FillPoint(stateList, CurrentPosition, direction);
                 }
                 else
                 {
-                    bool saveInfo = true;
-                    CurrentPosition = stateList.Last().Point;
-                    direction = stateList.Last().Direction;
-                    stateList.RemoveAt(stateList.Count - 1);
-                    switch (direction)
+                    bool saveInfoIntoStateList = true;
+
+                    direction = RemoveBadState(stateList);
+                    
+                    if (CanSwitchDirection(direction))
+                        direction = SwitchDirection(direction);
+                    else
+                        saveInfoIntoStateList = false;
+                    if (saveInfoIntoStateList)
                     {
-                        case Direction.Left:
-                            direction = Direction.Down;
-                            break;
-                        case Direction.Down:
-                            direction = Direction.Right;
-                            break;
-                        case Direction.Right:
-                            direction = Direction.Up;
-                            break;
-                        case Direction.Up:
-                            saveInfo = false;
-                            break;
-                    }
-                    if (saveInfo)
-                    {
-                        CycledFiledState state = new CycledFiledState();
-                        state.Point = CurrentPosition;
-                        state.Direction = direction;
-                        stateList.Add(state);
+                        SaveState(stateList, CurrentPosition, direction);
                     }
                 }
-                switch (direction)
-                {
-                    case Direction.Left:
-                        CurrentPosition = CurrentPosition.Left;
-                        break;
-                    case Direction.Down:
-                        CurrentPosition = CurrentPosition.Down;
-                        break;
-                    case Direction.Right:
-                        CurrentPosition = CurrentPosition.Rigth;
-                        break;
-                    case Direction.Up:
-                        CurrentPosition = CurrentPosition.Up;
-                        break;
-                }
+                MoveCurrentPosition(direction);
             } while (stateList.Any());
+        }
+
+        private Direction RemoveBadState(List<CycledFiledState> stateList)
+        {
+            CurrentPosition = stateList.Last().Point;
+            var resultDirection = stateList.Last().Direction;
+            stateList.RemoveAt(stateList.Count - 1);
+            return resultDirection;
+        }
+
+        private void MoveCurrentPosition(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    CurrentPosition = CurrentPosition.Left;
+                    break;
+                case Direction.Down:
+                    CurrentPosition = CurrentPosition.Down;
+                    break;
+                case Direction.Right:
+                    CurrentPosition = CurrentPosition.Rigth;
+                    break;
+                case Direction.Up:
+                    CurrentPosition = CurrentPosition.Up;
+                    break;
+            }
+        }
+
+        private bool CanSwitchDirection(Direction direction)
+        {
+            return direction == Direction.Up;
+        }
+
+        private Direction SwitchDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    return Direction.Down;
+                case Direction.Down:
+                    return Direction.Right;
+                case Direction.Right:
+                    return Direction.Up;
+                default:
+                    return Direction.Up;
+            }
+        }
+
+        private void FillPoint(List<CycledFiledState> stateList, Point currentPosition, Direction direction)
+        {
+            direction = Direction.Left;
+            SaveState(stateList, currentPosition, direction);
+            if (fieldEnums[CurrentPosition.Y][CurrentPosition.X] != FieldEnums.StartPosition)
+            {
+                fieldEnums[CurrentPosition.Y][CurrentPosition.X] = FieldEnums.FillPoint;
+            }
+        }
+
+        private void SaveState(List<CycledFiledState> stateList, Point currentPosition, Direction direction)
+        {
+            CycledFiledState state = new CycledFiledState();
+            state.Point = CurrentPosition;
+            state.Direction = direction;
+            stateList.Add(state);
         }
 
         public void FillField()
@@ -143,6 +173,43 @@ namespace Lab1_5
         public static FieldEnums[][] FillFieldFromFile(string fileName)
         {
             //initialize result
+            FieldEnums[][] result = GetFieldEnumsInstance();
+
+            string[] readLines = File.ReadAllLines(fileName);
+
+            int rowCounter = 0;
+            foreach (var line in readLines)
+            {
+                FillLine(line, ref result, rowCounter);
+                rowCounter++;
+            }
+
+            return result;
+        }
+
+        private static void FillLine(string line, ref FieldEnums[][] result, int rowCounter)
+        {
+            int positionCounter = 0;
+            foreach (var symbol in line)
+            {
+                switch (symbol)
+                {
+                    case (char)FieldEnums.Space:
+                        result[rowCounter][positionCounter] = FieldEnums.Space;
+                        break;
+                    case (char)FieldEnums.StartPosition:
+                        result[rowCounter][positionCounter] = FieldEnums.StartPosition;
+                        break;
+                    default:
+                        result[rowCounter][positionCounter] = FieldEnums.Border;
+                        break;
+                }
+                positionCounter++;
+            }
+        }
+
+        private static FieldEnums[][] GetFieldEnumsInstance()
+        {
             FieldEnums[][] result = new FieldEnums[MAX_Y][];
             for (int i = 0; i < result.Length; i++)
             {
@@ -155,31 +222,6 @@ namespace Lab1_5
                 {
                     result[i][j] = FieldEnums.Space;
                 }
-            }
-
-            string[] readLines = File.ReadAllLines(fileName);
-
-            int rowCounter = 0;
-            foreach (var line in readLines)
-            {
-                int positionCounter = 0;
-                foreach (var symbol in line)
-                {
-                    switch (symbol)
-                    {
-                        case (char)FieldEnums.Space:
-                            result[rowCounter][positionCounter] = FieldEnums.Space;
-                            break;
-                        case (char)FieldEnums.StartPosition:
-                            result[rowCounter][positionCounter] = FieldEnums.StartPosition;
-                            break;
-                        default:
-                            result[rowCounter][positionCounter] = FieldEnums.Border;
-                            break;
-                    }
-                    positionCounter++;
-                }
-                rowCounter++;
             }
 
             return result;

@@ -43,7 +43,8 @@ namespace Lab1_4
                 {
                     using (BinaryWriter binaryWriter = new BinaryWriter(outputFileStream, Encoding.GetEncoding(866)))
                     {
-
+                        //TODO Compressor
+                        //Class
                         byte counter = 0;
                         char? prevCharacter = null;
                         char? readChar = null;
@@ -89,6 +90,8 @@ namespace Lab1_4
 
         private static void UnCompress(string sourceFile, string destFile)
         {
+            //Уменьшить количество уровней вложенности
+            //Избавиться от encoding
             using (FileStream inputFileStream = File.OpenRead(sourceFile), outputFileStream = File.OpenWrite(destFile))
             {
                 using (BinaryReader binaryReader = new BinaryReader(inputFileStream, Encoding.GetEncoding(866)))
@@ -103,6 +106,7 @@ namespace Lab1_4
                                 isEndOfFile = true;
                             else
                             {
+                                //Пакет данных
                                 byte counter = binaryReader.ReadByte();
                                 if (binaryReader.PeekChar() == -1)
                                     throw new EndOfStreamException($"Непредвиденный конец файла {sourceFile}");
@@ -120,6 +124,8 @@ namespace Lab1_4
 
         public static int Main(string[] args)
         {
+            // переделать в параметры -> CheckParams ParceParams
+            // >255 = 255 byte + x byte
             ResultEnums resultCheckParam = CheckParams(args);
             if (resultCheckParam != ResultEnums.Ok)
                 return (int)resultCheckParam;
@@ -141,6 +147,7 @@ namespace Lab1_4
             }
             catch (IndexOutOfRangeException e)
             {
+                //Сделать исключения проще
                 Console.WriteLine(e.Message);
                 try
                 {
