@@ -41,21 +41,21 @@ namespace Lab1_5
                 FieldWorker.SaveFieldToFile(worker, args[1]);
             }
             //уменьшить Exception
-            catch (FileLoadException e)
-            {
-                Console.WriteLine($"Ошибка при чтении файла {args[0]}\n{e.Message}\n{string.Join("<-", e.Data)}");
-                return (int)StatusEnums.WorkWithFileError;
-            }
-            catch (OutOfMemoryException e)
-            {
-                Console.WriteLine($"Ошибка при выделении памяти\n{e.Message}\n{string.Join("<-", e.Data)}");
-                return (int)StatusEnums.OutOfMemoryError;
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine($"Ошибка при работе с файлом\n{e.Message}\n{string.Join("<-", e.Data)}");
-                return (int)StatusEnums.WorkWithFileError;
-            }
+            //catch (FileLoadException e)
+            //{
+            //    Console.WriteLine($"Ошибка при чтении файла {args[0]}\n{e.Message}\n{string.Join("<-", e.Data)}");
+            //    return (int)StatusEnums.WorkWithFileError;
+            //}
+            //catch (OutOfMemoryException e)
+            //{
+            //    Console.WriteLine($"Ошибка при выделении памяти\n{e.Message}\n{string.Join("<-", e.Data)}");
+            //    return (int)StatusEnums.OutOfMemoryError;
+            //}
+            //catch (IOException e)
+            //{
+            //    Console.WriteLine($"Ошибка при работе с файлом\n{e.Message}\n{string.Join("<-", e.Data)}");
+            //    return (int)StatusEnums.WorkWithFileError;
+            //}
             catch (Exception e)
             {
                 Console.WriteLine($"{e.Message}\n{string.Join("<-", e.Data)}");

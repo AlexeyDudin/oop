@@ -46,12 +46,13 @@ namespace Lab1_5
 
         private void CycledFill()
         {
-            Direction direction = Direction.Left;
+            Direction direction = SetDefaultDirection();
             List<CycledFieldState> stateList = new List<CycledFieldState>();
             do
             {
                 if (CanFillPoint(CurrentPosition))
                 {
+                    direction = SetDefaultDirection();
                     FillPoint(stateList, CurrentPosition, direction);
                 }
                 else
@@ -71,6 +72,11 @@ namespace Lab1_5
                 }
                 MoveCurrentPosition(direction);
             } while (stateList.Any());
+        }
+
+        private Direction SetDefaultDirection()
+        {
+            return Direction.Left;
         }
 
         private Direction RemoveBadState(List<CycledFieldState> stateList)
@@ -229,8 +235,8 @@ namespace Lab1_5
 
         public static void SaveFieldToFile(FieldWorker field, string outputFileName)
         {
-            if (File.Exists(outputFileName))
-                File.Delete(outputFileName);
+            RewriteFile(outputFileName);
+
             List<string> result = new List<string>();
             foreach (var row in field.fieldEnums)
             {
@@ -243,6 +249,12 @@ namespace Lab1_5
             }
 
             File.AppendAllLines(outputFileName, result);
+        }
+
+        private static void RewriteFile(string outputFileName)
+        {
+            if (File.Exists(outputFileName))
+                File.Delete(outputFileName);
         }
     }
 }
