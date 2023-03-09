@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="CycledFiledState.cs" />
     <Compile Include="Direction.cs" />
-    <Compile Include="Field.cs" />
+    <Compile Include="FieldWorker.cs" />
     <Compile Include="FieldEnums.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />

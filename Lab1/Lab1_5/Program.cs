@@ -33,13 +33,14 @@ namespace Lab1_5
             if (result != StatusEnums.Ok)
                 return (int)result;
 
-            Field field = new Field();
+            FieldWorker worker = new FieldWorker();
             try
             {
-                field.FieldPole = Field.FillFieldFromFile(args[0]);
-                field.FillField();
-                Field.SaveFiledToFile(field, args[1]);
+                worker.Field = FieldWorker.LoadFieldFromFile(args[0]);
+                worker.FillField();
+                FieldWorker.SaveFieldToFile(worker, args[1]);
             }
+            //уменьшить Exception
             catch (FileLoadException e)
             {
                 Console.WriteLine($"Ошибка при чтении файла {args[0]}\n{e.Message}\n{string.Join("<-", e.Data)}");

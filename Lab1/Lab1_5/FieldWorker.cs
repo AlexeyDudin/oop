@@ -12,7 +12,7 @@ namespace Lab1_5
 
         private FieldEnums[][] fieldEnums;
         private Point CurrentPosition { get; set; }
-        public FieldEnums[][] FieldPole 
+        public FieldEnums[][] Field 
         {
             get => fieldEnums;
             set
@@ -47,7 +47,7 @@ namespace Lab1_5
         private void CycledFill()
         {
             Direction direction = Direction.Left;
-            List<CycledFiledState> stateList = new List<CycledFiledState>();
+            List<CycledFieldState> stateList = new List<CycledFieldState>();
             do
             {
                 if (CanFillPoint(CurrentPosition))
@@ -73,7 +73,7 @@ namespace Lab1_5
             } while (stateList.Any());
         }
 
-        private Direction RemoveBadState(List<CycledFiledState> stateList)
+        private Direction RemoveBadState(List<CycledFieldState> stateList)
         {
             CurrentPosition = stateList.Last().Point;
             var resultDirection = stateList.Last().Direction;
@@ -102,7 +102,7 @@ namespace Lab1_5
 
         private bool CanSwitchDirection(Direction direction)
         {
-            return direction == Direction.Up;
+            return direction != Direction.Up;
         }
 
         private Direction SwitchDirection(Direction direction)
@@ -120,7 +120,7 @@ namespace Lab1_5
             }
         }
 
-        private void FillPoint(List<CycledFiledState> stateList, Point currentPosition, Direction direction)
+        private void FillPoint(List<CycledFieldState> stateList, Point currentPosition, Direction direction)
         {
             direction = Direction.Left;
             SaveState(stateList, currentPosition, direction);
@@ -130,9 +130,9 @@ namespace Lab1_5
             }
         }
 
-        private void SaveState(List<CycledFiledState> stateList, Point currentPosition, Direction direction)
+        private void SaveState(List<CycledFieldState> stateList, Point currentPosition, Direction direction)
         {
-            CycledFiledState state = new CycledFiledState();
+            CycledFieldState state = new CycledFieldState();
             state.Point = CurrentPosition;
             state.Direction = direction;
             stateList.Add(state);
@@ -170,7 +170,7 @@ namespace Lab1_5
             }
         }
 
-        public static FieldEnums[][] FillFieldFromFile(string fileName)
+        public static FieldEnums[][] LoadFieldFromFile(string fileName)
         {
             //initialize result
             FieldEnums[][] result = GetFieldEnumsInstance();
@@ -227,7 +227,7 @@ namespace Lab1_5
             return result;
         }
 
-        public static void SaveFiledToFile(Field field, string outputFileName)
+        public static void SaveFieldToFile(Field field, string outputFileName)
         {
             if (File.Exists(outputFileName))
                 File.Delete(outputFileName);
