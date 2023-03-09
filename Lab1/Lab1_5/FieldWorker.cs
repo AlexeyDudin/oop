@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Lab1_5
 {
-    public class Field
+    public class FieldWorker
     {
         public const int MAX_X = 100;
         public const int MAX_Y = 100;
@@ -227,7 +227,7 @@ namespace Lab1_5
             return result;
         }
 
-        public static void SaveFieldToFile(Field field, string outputFileName)
+        public static void SaveFieldToFile(FieldWorker field, string outputFileName)
         {
             if (File.Exists(outputFileName))
                 File.Delete(outputFileName);
