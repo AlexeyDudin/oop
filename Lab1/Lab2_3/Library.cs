@@ -42,7 +42,8 @@ namespace Lab2_3
 
         public Word FindWord(string value)
         {
-            return words.Where(w => w.FirstWord == value || w.SecondWord == value).FirstOrDefault();
+            string modifyValue = value.ToUpper();
+            return words.Where(w => w.FirstWord.ToUpper() == modifyValue || w.SecondWord.ToUpper() == modifyValue).FirstOrDefault();
         }
 
         public void AddWord(Word word) 
