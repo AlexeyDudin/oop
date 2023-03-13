@@ -7,10 +7,13 @@ namespace Lab1_5
 {
     public class FieldWorker
     {
+        //Разделить FieldWorker от Field!!!
         public const int MAX_X = 100;
         public const int MAX_Y = 100;
 
+        //не понятное поле
         private FieldEnums[][] fieldEnums;
+        //То, что не меняет значение после выхода между функциями
         private Point CurrentPosition { get; set; }
         public FieldEnums[][] Field 
         {
@@ -22,6 +25,7 @@ namespace Lab1_5
             }
         }
 
+        //Вынести в Fill
         public List<Point> StartPoints { get; } = new List<Point>();
 
         //private void RecourciveFill()
@@ -47,7 +51,7 @@ namespace Lab1_5
         private void CycledFill()
         {
             Direction direction = SetDefaultDirection();
-            List<CycledFieldState> stateList = new List<CycledFieldState>();
+            List<FieldState> stateList = new List<FieldState>();
             do
             {
                 if (CanFillPoint(CurrentPosition))
@@ -59,12 +63,13 @@ namespace Lab1_5
                 {
                     bool saveInfoIntoStateList = true;
 
-                    direction = RemoveBadState(stateList);
+                    direction = SetLastGoodState(stateList);
                     
                     if (CanSwitchDirection(direction))
                         direction = SwitchDirection(direction);
                     else
                         saveInfoIntoStateList = false;
+
                     if (saveInfoIntoStateList)
                     {
                         SaveState(stateList, CurrentPosition, direction);
@@ -79,7 +84,7 @@ namespace Lab1_5
             return Direction.Left;
         }
 
-        private Direction RemoveBadState(List<CycledFieldState> stateList)
+        private Direction SetLastGoodState(List<FieldState> stateList)
         {
             CurrentPosition = stateList.Last().Point;
             var resultDirection = stateList.Last().Direction;
@@ -126,7 +131,7 @@ namespace Lab1_5
             }
         }
 
-        private void FillPoint(List<CycledFieldState> stateList, Point currentPosition, Direction direction)
+        private void FillPoint(List<FieldState> stateList, Point currentPosition, Direction direction)
         {
             direction = Direction.Left;
             SaveState(stateList, currentPosition, direction);
@@ -136,9 +141,9 @@ namespace Lab1_5
             }
         }
 
-        private void SaveState(List<CycledFieldState> stateList, Point currentPosition, Direction direction)
+        private void SaveState(List<FieldState> stateList, Point currentPosition, Direction direction)
         {
-            CycledFieldState state = new CycledFieldState();
+            FieldState state = new FieldState();
             state.Point = CurrentPosition;
             state.Direction = direction;
             stateList.Add(state);
