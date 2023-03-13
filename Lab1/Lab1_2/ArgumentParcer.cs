@@ -2,7 +2,7 @@
 
 namespace Lab1_2
 {
-    public class Arguments
+    public class ArgumentParcer
     {
         public int SourceNotation { get; set; }
         public int DestinationNotation { get; set; }
@@ -68,7 +68,7 @@ namespace Lab1_2
             return ResultEnums.Ok; //CheckValueOnNotationException(args[0], args[2]);
         }
 
-        public Arguments(string[] args) 
+        public ArgumentParcer(string[] args) 
         {
             var resultCheckParam = CheckParam(args);
             if (resultCheckParam == ResultEnums.Ok)

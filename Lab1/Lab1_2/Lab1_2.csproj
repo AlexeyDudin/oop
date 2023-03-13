@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments.cs" />
+    <Compile Include="ArgumentParcer.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="ResultEnums.cs" />
     <Compile Include="Program.cs" />

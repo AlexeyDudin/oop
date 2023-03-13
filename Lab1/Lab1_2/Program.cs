@@ -9,7 +9,7 @@ namespace Lab1_2
         {
             try
             {
-                Arguments argumentParcer = new Arguments(args);
+                ArgumentParcer argumentParcer = new ArgumentParcer(args);
 
                 string inputValue = argumentParcer.Value.ToUpper();
 
