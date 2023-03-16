@@ -6,10 +6,13 @@ using System.Text.Json;
 
 namespace Lab2_3
 {
-    public class Library
+    //Допереименовать
+    //HashMap или SortMap
+    //Обработка ошибок загруки - другой класс
+    public class Dictionary
     {
         private string libraryFileName = "";
-        private List<Word> words;
+        private HashSet<Word> words;
         private bool haveNewWord = false;
 
         public void LoadLibrary(string fileName)
@@ -19,20 +22,21 @@ namespace Lab2_3
             {
                 string readJson = File.ReadAllText(fileName);
             
-                words = JsonSerializer.Deserialize<List<Word>>(readJson);
+                words = JsonSerializer.Deserialize<HashSet<Word>>(readJson);
             }
             catch (Exception ex) 
             {
                 Console.WriteLine($"Ошибка чтения файла библиотеки\n{ex.Message}");
-                words = new List<Word>();
+                words = new HashSet<Word>();
             }
         }
 
-        public bool IsHaveNewWord()
+        public bool HasNewWords()
         { 
             return haveNewWord; 
         }
 
+        //Лучше не знать как себя сохранять
         public void SaveLibrary()
         {
             var fileStream = File.Create(libraryFileName);
@@ -40,12 +44,13 @@ namespace Lab2_3
             fileStream.Close();
         }
 
-        public Word FindWord(string value)
+        public List<Word> FindWord(string value)
         {
             string modifyValue = value.ToUpper();
-            return words.Where(w => w.FirstWord.ToUpper() == modifyValue || w.SecondWord.ToUpper() == modifyValue).FirstOrDefault();
+            return words.Where(w => w.FirstWord.ToUpper() == modifyValue || w.SecondWord.ToUpper() == modifyValue).ToList();
         }
 
+        //А что будет, если слово уже есть
         public void AddWord(Word word) 
         {
             words.Add(word);

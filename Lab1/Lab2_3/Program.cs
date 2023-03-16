@@ -6,7 +6,7 @@ namespace Lab2_3
     {
         public static void Main(string[] args)
         {
-            Library library = new Library();
+            Dictionary library = new Dictionary();
             library.LoadLibrary("library.json");
             ConsoleWorker consoleWorker = new ConsoleWorker(Console.In, Console.Out);
             consoleWorker.Run(library);

@@ -7,7 +7,7 @@
 int main(int argc, char ** argv)
 {
 	setlocale(LC_ALL, "Russian");
-	std::cout << "Введите элементы массива (через пробел). Позавершении нажмите \'Enter\'" << std::endl;
+	std::cout << "Введите элементы массива (через пробел). По завершении нажмите \'Enter\'" << std::endl;
 	auto fillVector = FillVectorFrom(std::cin);
 
 	float median = FindMedian(&fillVector);

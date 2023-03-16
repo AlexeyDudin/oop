@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Set;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,48 +8,46 @@ namespace Lab2_4
 {
     public static class DictionaryWorker
     {
-        private static void FillEratosphen(Dictionary<int, bool> dictionary)
+        private static void FillEratosphen(HashSet<int> dictionary)
         {
             for (int i = 2; i < dictionary.Count; i++)
             {
-                if (dictionary[i])
-                    SetValuesDisable(dictionary, i);
+                RemoveValuesFromSet(dictionary, i);
             }
         }
 
-        private static void SetValuesDisable(Dictionary<int, bool> dictionary, int i)
+        private static void RemoveValuesFromSet(HashSet<int> dictionary, int i)
         {
             int multiplyer = 2;
             while (multiplyer * i < (uint)dictionary.Count)
             {
-                dictionary[multiplyer * i] = false;
+                dictionary.Remove(multiplyer * i);
                 multiplyer++;
             }
         }
 
-        public static Dictionary<int, bool> GeneratePrimeNumbersSet(int upperBound)
+        public static HashSet<int> GeneratePrimeNumbersSet(int upperBound)
         {
-            Dictionary<int, bool> result = FillDictionary(upperBound);
+            HashSet<int> result = FillDictionary(upperBound);
             FillEratosphen(result);
             return result;
         }
 
-        private static Dictionary<int, bool> FillDictionary(int upperBound)
+        private static HashSet<int> FillDictionary(int upperBound)
         {
-            Dictionary<int, bool> result = new Dictionary<int, bool>();
+            HashSet<int> result = new HashSet<int>();
             for (int i = 1; i < upperBound; i++)
             {
-                result.Add(i, true);
+                result.Add(i);
             }
             return result;
         }
 
-        public static void Write(Dictionary<int, bool> result)
+        public static void Write(HashSet<int> result)
         {
-            for (int i = 1; i < result.Count; i++)
+            foreach (var elem in result)
             {
-                if (result[i])
-                    Console.Write($"{i} ");
+                Console.WriteLine($"{elem}");
             }
         }
     }

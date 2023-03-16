@@ -133,6 +133,18 @@
   <ItemGroup>
     <ClInclude Include="VectorWorker.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="BadFile.txt" />
+    <Text Include="Empty.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="EthalonEmptyRes.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

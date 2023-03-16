@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B8E8E559-BE37-4035-922D-90E8D17EE15E}</ProjectGuid>
+    <ProjectGuid>{EAFA3DD2-6BCE-4871-BA3B-AF58A200048B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Lab2_4</RootNamespace>
-    <AssemblyName>Lab2_4</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <RootNamespace>Lab2_5</RootNamespace>
+    <AssemblyName>Lab2_5</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -44,10 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictionaryWorker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Set.cs" />
+    <Compile Include="ProtocolEnum.cs" />
+    <Compile Include="StateParcer.cs" />
+    <Compile Include="Url.cs" />
+    <Compile Include="UrlDecoder.cs" />
+    <Compile Include="СomparisonPortProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -27,4 +27,20 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.bat">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Empty.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="EthalonEmptyRes.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="BadFile.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

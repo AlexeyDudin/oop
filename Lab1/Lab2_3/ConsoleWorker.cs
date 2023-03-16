@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Lab2_3
@@ -20,35 +21,61 @@ namespace Lab2_3
             _textWriter.Write(">");
         }
 
-        public void Run(Library library) 
+        public void Run(Dictionary library) 
         {
             while (true)
             {
                 PrintUserInputSymbol(_textWriter);
                 string userWord = _textReader.ReadLine();
-
-                if (IsExit(userWord, _textReader, _textWriter, library))
-                    break;
-                
-                Word findWord = library.FindWord(userWord);
-
-                if (findWord == null)
+                if (!string.IsNullOrWhiteSpace(userWord))
                 {
-                    AddWord(userWord, _textWriter, _textReader, library);
-                }
-                else
-                {
-                    PrintFindWord(userWord, findWord, _textWriter);
+                    //Зачем поля этого класса передавать внутрь себя?
+                    if (IsExit(userWord, _textReader, _textWriter, library))
+                        break;
+
+                    var findWords = library.FindWord(userWord);
+
+                    if (findWords.Count == 0)
+                    {
+                        AddWord(userWord, _textWriter, _textReader, library);
+                    }
+                    else
+                    {
+                        PrintFindWord(userWord, findWords, _textWriter);
+                    }
                 }
             }
         }
 
-        private void PrintFindWord(string userWord, Word findWord, TextWriter textWriter)
+        private void PrintFindWord(string userWord, System.Collections.Generic.List<Word> findWords, TextWriter textWriter)
         {
-            _textWriter.WriteLine((findWord.FirstWord == userWord) ? findWord.SecondWord : findWord.FirstWord); ;
+            foreach (var findWord in findWords)
+            {
+                if (findWord.FirstWord.ToUpper() == userWord.ToUpper())
+                {
+                    List<string> translateWords = new List<string>();
+                    foreach (var translateFindWord in findWords)
+                    {
+                        translateWords.Add(translateFindWord.SecondWord);
+                    }
+                    _textWriter.WriteLine(string.Join(", ", translateWords));
+                    break;
+                }
+                else if (findWord.SecondWord.ToUpper() == userWord.ToUpper())
+                {
+                    List<string> translateWords = new List<string>();
+                    foreach (var translateFindWord in findWords)
+                    {
+                        translateWords.Add(translateFindWord.FirstWord);
+                    }
+                    _textWriter.WriteLine(string.Join(", ", translateWords));
+                    break;
+                }
+                //_textWriter.WriteLine((findWords.FirstWord == userWord) ? findWords.SecondWord : findWords.FirstWord);
+            }
         }
 
-        private void AddWord(string userWord, TextWriter textWriter, TextReader textReader, Library library)
+        private void AddWord(string userWord, TextWriter textWriter, TextReader textReader, Dictionary library)
         {
             _textWriter.WriteLine($"Неизвестное слово \"{userWord}\". Введите перевод или пустую строку для отказа.");
             PrintUserInputSymbol(_textWriter);
@@ -56,15 +83,19 @@ namespace Lab2_3
 
             if (!string.IsNullOrWhiteSpace(translateWord))
             {
-                Word word = new Word()
+                string[] words = translateWord.Split(',');
+                foreach (var textWord in words)
                 {
-                    FirstWord = userWord,
-                    SecondWord = translateWord
-                };
+                    Word word = new Word()
+                    {
+                        FirstWord = userWord,
+                        SecondWord = textWord.Trim()
+                    };
 
-                library.AddWord(word);
-                
-                _textWriter.WriteLine($"Слово \"{word.FirstWord}\" сохранено в словаре как \"{word.SecondWord}\".");
+                    library.AddWord(word);
+
+                    _textWriter.WriteLine($"Слово \"{word.FirstWord}\" сохранено в словаре как \"{word.SecondWord}\".");
+                }
             }
             else
             {
@@ -72,11 +103,11 @@ namespace Lab2_3
             }
         }
 
-        private bool IsExit(string userWord, TextReader textReader, TextWriter textWriter, Library library)
+        private bool IsExit(string userWord, TextReader textReader, TextWriter textWriter, Dictionary library)
         {
             if (userWord == EXIT_STRING)
             {
-                if (library.IsHaveNewWord())
+                if (library.HasNewWords())
                 {
                     _textWriter.WriteLine("В словарь были внесены изменения. Введите Y или y для сохранения перед выходом.");
                     

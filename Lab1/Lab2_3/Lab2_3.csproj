@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleWorker.cs" />
-    <Compile Include="Library.cs" />
+    <Compile Include="Dictionary.cs" />
     <Compile Include="Word.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
