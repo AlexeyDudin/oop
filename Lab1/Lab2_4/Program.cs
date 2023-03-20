@@ -8,7 +8,7 @@ namespace Lab2_4
     {
         public static void Main(string[] args)
         {
-            HashSet<int> result = DictionaryWorker.GeneratePrimeNumbersSet(Int32.Parse(Console.ReadLine()));
+            var result = DictionaryWorker.GeneratePrimeNumbersSet(Int32.Parse(Console.ReadLine()));
             DictionaryWorker.Write(result);
             Console.ReadKey();
         }

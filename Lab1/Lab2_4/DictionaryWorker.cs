@@ -8,7 +8,7 @@ namespace Lab2_4
 {
     public static class DictionaryWorker
     {
-        private static void FillEratosphen(HashSet<int> dictionary)
+        private static void FillEratosphen(HashSet<Element> dictionary)
         {
             for (int i = 2; i < dictionary.Count; i++)
             {
@@ -16,38 +16,39 @@ namespace Lab2_4
             }
         }
 
-        private static void RemoveValuesFromSet(HashSet<int> dictionary, int i)
+        private static void RemoveValuesFromSet(HashSet<Element> dictionary, int i)
         {
             int multiplyer = 2;
-            while (multiplyer * i < (uint)dictionary.Count)
+            while (multiplyer * i < (uint)dictionary.Count())
             {
-                dictionary.Remove(multiplyer * i);
+                dictionary.ElementAt(multiplyer * i).IsActive = false;
                 multiplyer++;
             }
         }
 
-        public static HashSet<int> GeneratePrimeNumbersSet(int upperBound)
+        public static HashSet<Element> GeneratePrimeNumbersSet(int upperBound)
         {
-            HashSet<int> result = FillDictionary(upperBound);
+            HashSet<Element> result = FillDictionary(upperBound);
             FillEratosphen(result);
             return result;
         }
 
-        private static HashSet<int> FillDictionary(int upperBound)
+        private static HashSet<Element> FillDictionary(int upperBound)
         {
-            HashSet<int> result = new HashSet<int>();
+            HashSet<Element> result = new HashSet<Element>();
             for (int i = 1; i < upperBound; i++)
             {
-                result.Add(i);
+                result.Add(new Element() { Number = i, IsActive = true });
             }
             return result;
         }
 
-        public static void Write(HashSet<int> result)
+        public static void Write(HashSet<Element> result)
         {
             foreach (var elem in result)
             {
-                Console.WriteLine($"{elem}");
+                if (elem.IsActive)
+                    Console.WriteLine($"{elem}");
             }
         }
     }

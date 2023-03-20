@@ -7,15 +7,15 @@ namespace Lab2_2
     public class Window
     {
         private readonly TextWriter _textWriter;
+        //попробовать другой способ
+        private string[] window;
 
         public Window(TextWriter textWriter)
         {
             _textWriter = textWriter;
-            int maxLenght = GetMaxKeyLenght();
-            window = new string[maxLenght];
+            int maxLength = GetMaxKeyLenght();
+            window = new string[maxLength];
         }
-
-        private string[] window;
 
         private void WriteSymbol(string value)
         {
@@ -48,13 +48,17 @@ namespace Lab2_2
                 window[window.Length - 1 - i] = "";
             }
         }
-
         private void RemoveCharsInWindow(string key)
         {
             for (int i = 0; i < key.Length; i++)
             {
                 window[window.Length - 1 - i] = "";
             }
+        }
+        private void MoveWindow()
+        {
+            for (int i = 0; i < window.Length - 1; i++)
+                window[i] = window[i + 1];
         }
 
         public void Parce()
@@ -65,7 +69,7 @@ namespace Lab2_2
                 if (calculateString.Contains(key))
                 {
                     RemoveCharsInWindow(key);
-                    WriteAllSymbols();
+                    WriteAllAvailableSymbols();
                     RemoveCharsInWindow(ref window, window.Length);
                     WriteSymbol(HtmlCodes.Dictionary[key]);
                     break;
@@ -73,14 +77,9 @@ namespace Lab2_2
             }
         }
 
-        public void MoveWindow()
+        public void Push(string character)
         {
-            for (int i = 0; i < window.Length - 1; i++)
-                window[i] = window[i + 1];
-        }
-
-        public void SetLastCharacter(string character)
-        {
+            MoveWindow();
             window[window.Length - 1] = character;
         }
 
@@ -88,12 +87,13 @@ namespace Lab2_2
         {
             WriteSymbol(window[0]);
         }
-        public void WriteAllSymbols()
+        public void WriteAllAvailableSymbols()
         {
             foreach (var element in window)
             {
                 WriteSymbol(element);
             }
+            _textWriter.WriteLine();
         }
     }
 }

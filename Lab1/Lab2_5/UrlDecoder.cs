@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Lab2_5
 {
@@ -45,26 +46,31 @@ namespace Lab2_5
 
         private static string ParceHost(ref string input)
         {
-            string readString = "";
-            for (int i = 0; i < input.Length; i++)
-            {
-                readString += input[i];
-                if (readString.EndsWith("/") || readString.EndsWith(":"))
-                    break;
-            }
-            input = input.Remove(0, readString.Length - 1);
+            string regularExpression = @"^\w(:?/)";
+            string readString = GetStringByReqularExpr(input, regularExpression);
+            //for (int i = 0; i < input.Length; i++)
+            //{
+            //    readString += input[i];
+            //    if (readString.EndsWith("/") || readString.EndsWith(":"))
+            //        break;
+            //}
+            //input = input.Remove(0, readString.Length - 1);
             return readString;
         }
 
         private static ProtocolEnum ParceProtocol(ref string input)
         {
-            string readString = "";
-            for (int i = 0; i < input.Length; i++)
-            {
-                readString += input[i]; 
-                if (readString.EndsWith("://"))
-                    break;
-            }
+            string regularExpression = @"(^\D*://)";
+
+            //string readString = "";
+            //for (int i = 0; i < input.Length; i++)
+            //{
+            //    readString += input[i]; 
+            //    if (readString.EndsWith("://"))
+            //        break;
+            //}
+
+            string readString = GetStringByReqularExpr(input, regularExpression);
             readString = readString.ToUpper();
             input = input.Remove(0, readString.Length);
             switch (readString)
@@ -78,6 +84,13 @@ namespace Lab2_5
                 default:
                     throw new FormatException($"Ошибка парсинга строки {input}. Не могу определить тип протокола");
             }
+        }
+
+        private static string GetStringByReqularExpr(string input, string regularExpression)
+        {
+            Regex regex = new Regex(regularExpression, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            var match = regex.Match(input);
+            return match.Value;
         }
     }
 }

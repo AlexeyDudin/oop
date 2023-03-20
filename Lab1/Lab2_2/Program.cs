@@ -4,6 +4,9 @@ namespace Lab2_2
 {
     public class Program
     {
+        //Пофиксить каждую сущность в отдельной строке
+        //тесты
+
         public static void Main(string[] args)
         {
             var inputStream = Console.In;

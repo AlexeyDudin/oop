@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab2_5
 {
-    public class СomparisonPortProtocol
+    public static class СomparisonPortProtocol
     {
         public static Dictionary<ProtocolEnum, ushort> Dictionary = new Dictionary<ProtocolEnum, ushort>()
         {
