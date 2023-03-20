@@ -8,48 +8,44 @@ namespace Lab2_4
 {
     public static class DictionaryWorker
     {
-        private static void FillEratosphen(HashSet<Element> dictionary)
+        private static HashSet<int> FillEratosphen(int upperBound)
         {
-            for (int i = 2; i < dictionary.Count; i++)
+            HashSet<int> result = new HashSet<int>();
+            List<bool> bools = new List<bool>(Enumerable.Repeat(true, upperBound + 1));
+
+            for (int i = 2; i < bools.Count; i++)
             {
-                RemoveValuesFromSet(dictionary, i);
+                if (bools[i])
+                    RemoveValuesFromSet(bools, i);
             }
+
+            for (int i = 0; i < bools.Count; i++)
+            {
+                if (bools[i])
+                    result.Add(i);
+            }
+
+            return result;
         }
 
-        private static void RemoveValuesFromSet(HashSet<Element> dictionary, int i)
+        private static void RemoveValuesFromSet(List<bool> bools, int i)
         {
             int multiplyer = 2;
-            while (multiplyer * i < (uint)dictionary.Count())
+            while (multiplyer * i < (uint)bools.Count())
             {
-                dictionary.ElementAt(multiplyer * i).IsActive = false;
+                bools[multiplyer * i] = false;
                 multiplyer++;
             }
         }
 
-        public static HashSet<Element> GeneratePrimeNumbersSet(int upperBound)
+        public static HashSet<int> GeneratePrimeNumbersSet(int upperBound)
         {
-            HashSet<Element> result = FillDictionary(upperBound);
-            FillEratosphen(result);
-            return result;
+            return FillEratosphen(upperBound);
         }
 
-        private static HashSet<Element> FillDictionary(int upperBound)
+        public static void Write(HashSet<int> result)
         {
-            HashSet<Element> result = new HashSet<Element>();
-            for (int i = 1; i < upperBound; i++)
-            {
-                result.Add(new Element() { Number = i, IsActive = true });
-            }
-            return result;
-        }
-
-        public static void Write(HashSet<Element> result)
-        {
-            foreach (var elem in result)
-            {
-                if (elem.IsActive)
-                    Console.WriteLine($"{elem}");
-            }
+            Console.WriteLine(string.Join(", ", result));
         }
     }
 }
