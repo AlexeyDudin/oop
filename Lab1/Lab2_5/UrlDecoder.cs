@@ -12,7 +12,7 @@ namespace Lab2_5
 
             try
             {
-                result.Protocol = ParceProtocol(ref changedInput);
+                result.Protocol = ParceProtocol(changedInput);
                 result.Host = ParceHost(ref changedInput);
                 result.Port = ParcePort(ref changedInput, result.Protocol);
                 result.Document = changedInput;
@@ -46,7 +46,7 @@ namespace Lab2_5
 
         private static string ParceHost(ref string input)
         {
-            string regularExpression = @"^\w(:?/)";
+            string regularExpression = @"(://\w/)";
             string readString = GetStringByReqularExpr(input, regularExpression);
             //for (int i = 0; i < input.Length; i++)
             //{
@@ -58,7 +58,7 @@ namespace Lab2_5
             return readString;
         }
 
-        private static ProtocolEnum ParceProtocol(ref string input)
+        private static ProtocolEnum ParceProtocol(string input)
         {
             string regularExpression = @"(^\D*://)";
 
@@ -72,7 +72,7 @@ namespace Lab2_5
 
             string readString = GetStringByReqularExpr(input, regularExpression);
             readString = readString.ToUpper();
-            input = input.Remove(0, readString.Length);
+            //input = input.Remove(0, readString.Length);
             switch (readString)
             {
                 case "HTTP://":
@@ -88,7 +88,7 @@ namespace Lab2_5
 
         private static string GetStringByReqularExpr(string input, string regularExpression)
         {
-            Regex regex = new Regex(regularExpression, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            Regex regex = new Regex(regularExpression, RegexOptions.IgnoreCase);
             var match = regex.Match(input);
             return match.Value;
         }
