@@ -15,14 +15,18 @@ namespace Lab2_2
             if (readString == "q")//сделать выход нормальный
                 return readString;
             Window window = new Window(outputStream);
-            for (int i = 0; i < readString.Length; i++)
+            if (readString != null)
             {
-                //сделать одну функцию из 3
-                window.WriteFirstSymbol();
-                window.Push(readString[i].ToString());
-                window.Parce();
+                for (int i = 0; i < readString.Length; i++)
+                {
+                    //сделать одну функцию из 3
+                    window.WriteFirstSymbol();
+                    window.Push(readString[i].ToString());
+                    window.Parce();
+                }
             }
             window.WriteAllAvailableSymbols();
+
             return "";
         }
     }

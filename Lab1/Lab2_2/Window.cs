@@ -93,7 +93,6 @@ namespace Lab2_2
             {
                 WriteSymbol(element);
             }
-            _textWriter.WriteLine();
         }
     }
 }

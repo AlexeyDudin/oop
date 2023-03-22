@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lab2_Tests</RootNamespace>
     <AssemblyName>Lab2_Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -20,6 +20,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +52,7 @@
   <ItemGroup>
     <Compile Include="UnitTestLab2_2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTestLab2_3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,6 +61,18 @@
     <ProjectReference Include="..\Lab2_2\Lab2_2.csproj">
       <Project>{DF47DE4F-4840-4DB2-A5E9-57444D9B91DD}</Project>
       <Name>Lab2_2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab2_3\Lab2_3.csproj">
+      <Project>{53830159-1e8c-48eb-a568-afaa36e5c12b}</Project>
+      <Name>Lab2_3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab2_4\Lab2_4.csproj">
+      <Project>{b8e8e559-be37-4035-922d-90e8d17ee15e}</Project>
+      <Name>Lab2_4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lab2_5\Lab2_5.csproj">
+      <Project>{eafa3dd2-6bce-4871-ba3b-af58a200048b}</Project>
+      <Name>Lab2_5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
