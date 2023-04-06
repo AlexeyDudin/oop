@@ -9,13 +9,12 @@ namespace Lab2_5
         {
             string changedInput = input;
             Url result = new Url();
-
             try
             {
                 result.Protocol = ParceProtocol(changedInput);
-                result.Host = ParceHost(ref changedInput);
-                result.Port = ParcePort(ref changedInput, result.Protocol);
-                result.Document = changedInput;
+                result.Host = ParceHost(changedInput);
+                result.Port = ParcePort(changedInput, result.Protocol);
+                result.Document = ParceDocument(changedInput, GetHostPortString(changedInput));
 
                 return true;
             }
@@ -26,28 +25,35 @@ namespace Lab2_5
             }
         }
 
-        private static ushort ParcePort(ref string input, ProtocolEnum protocol)
+        private static string GetHostPortString(string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || (input[0] == '/'))
+            string regularExpression = @"((://)\D*[:/])";
+            return GetStringByReqularExpr(input, regularExpression);
+        }
+
+        private static string ParceDocument(string input, string hostPortString)
+        {
+            string regularExpression = $"{hostPortString}/\\D*$";
+            string readString = GetStringByReqularExpr(input, regularExpression);
+            readString = readString.Replace(hostPortString + "/", "");
+            return readString;
+        }
+
+        private static ushort ParcePort(string input, ProtocolEnum protocol)
+        {
+            string regularExpression = @":\d+";
+            string readString = GetStringByReqularExpr(input, regularExpression);
+            readString = readString.Replace(":", "");
+            if (string.IsNullOrWhiteSpace(readString))
                 return СomparisonPortProtocol.GetPortByProtocol(protocol);
-            input = input.Remove(0, 1);
-            string readString = "";
-            for (int i = 0; i < input.Length; i++)
-            {
-                readString += input[i];
-                if (readString.EndsWith("/"))
-                    break;
-            }
-            if (readString.EndsWith("/"))
-                readString = readString.Substring(0, readString.Length - 2);
-            input = input.Remove(0, readString.Length);
             return ushort.Parse(readString);
         }
 
-        private static string ParceHost(ref string input)
+        private static string ParceHost(string input)
         {
-            string regularExpression = @"(://\w/)";
+            string regularExpression = @"((://)\D*[:/])";
             string readString = GetStringByReqularExpr(input, regularExpression);
+            readString = readString.Substring(3, readString.Length - 4);
             //for (int i = 0; i < input.Length; i++)
             //{
             //    readString += input[i];

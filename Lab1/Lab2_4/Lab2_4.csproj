@@ -60,11 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictionaryWorker.cs" />
-    <Compile Include="Element.cs" />
+    <Compile Include="PrimeNumberWorker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Set.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

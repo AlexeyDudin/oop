@@ -10,12 +10,12 @@ int main(int argc, char ** argv)
 	std::cout << "Введите элементы массива (через пробел). По завершении нажмите \'Enter\'" << std::endl;
 	auto fillVector = FillVectorFrom(std::cin);
 
-	float median = FindMedian(&fillVector);
+	float median = FindMedian(fillVector);
 	std::cout << "Полученая медиана: " << median << std::endl;
-	VectorMinusMedian(&fillVector, median);
+	SubstractValueFromVectorElements(fillVector, median);
 	std::cout << std::endl << "Получен вектор с вычтенной медианой: ";
-	PrintVector(&fillVector);
+	PrintVector(fillVector);
 	std::cout << std::endl << "Сортированный вектор с вычтенной медианой: ";
-	auto sortVector = SortVector(&fillVector);
-	PrintVector(&sortVector);
+	auto sortVector = SortVector(fillVector);
+	PrintVector(sortVector);
 }

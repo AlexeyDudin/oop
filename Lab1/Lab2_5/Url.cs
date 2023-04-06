@@ -16,7 +16,14 @@ namespace Lab2_5
             _out.WriteLine($"Host: {this.Host}");
             _out.WriteLine($"Port: {this.Port}");
             _out.WriteLine($"Document: {this.Document}");
+        }
 
+        public override bool Equals(object obj)
+        {
+            var getObj = (Url)obj;
+            if (getObj == null) 
+                return false;
+            return (getObj.Host == this.Host && getObj.Port == this.Port && getObj.Protocol == this.Protocol && getObj.Document == this.Document);
         }
     }
 }

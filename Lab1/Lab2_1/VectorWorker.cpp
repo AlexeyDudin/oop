@@ -17,41 +17,38 @@ std::vector<float> FillVectorFrom(std::istream &inputStream)
 	return result;
 }
 
-void ModifyElementInVector(float& value, const float *median)
+//Переименовать
+void SubstractValueFromVectorElements(std::vector<float> &inputVector, float median)
 {
-	value -= *median;
+	//transform || range_based_for...
+	std::transform(inputVector.begin(), inputVector.end(), inputVector.begin(), [&median](float elementValue) { elementValue -= median; });
 }
 
-void VectorMinusMedian(std::vector<float> *inputVector, float median)
+void PrintVector(const std::vector<float>& inputVector)
 {
-	std::for_each(inputVector->begin(), inputVector->end(), [&](float& n)
+	//аналогично
+	for (float elementValue : inputVector)
 	{
-		n -= median;
-	});
-}
-
-void PrintVector(const std::vector<float>* inputVector)
-{
-	std::for_each(inputVector->begin(), inputVector->end(), [&](float n)
-	{
-		std::cout << n << " ";
-	});
+		std::cout << elementValue << " ";
+	}
 	std::cout << std::endl;
 }
 
-float FindMedian(const std::vector<float>* inputVector)
+//сделать ссылку, а не указатель
+float FindMedian(const std::vector<float>& inputVector)
 {
-	auto cloneVector(*inputVector);
+	auto cloneVector(inputVector);
 
-	auto m = cloneVector.begin() + cloneVector.size() / 2;
-	std::nth_element(cloneVector.begin(), m, cloneVector.end());
+	//mid || median
+	auto middle = cloneVector.begin() + cloneVector.size() / 2;
+	std::nth_element(cloneVector.begin(), middle, cloneVector.end());
 	auto median = cloneVector[cloneVector.size() / 2];
 	return median;
 }
 
-std::vector<float> SortVector(const std::vector<float>* inputVector)
+std::vector<float> SortVector(const std::vector<float>& inputVector)
 {
-	auto sortVector(*inputVector);
+	auto sortVector(inputVector);
 	std::sort(sortVector.begin(), sortVector.end());
 	return sortVector;
 }
