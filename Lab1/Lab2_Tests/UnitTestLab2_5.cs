@@ -49,5 +49,19 @@ namespace Lab2_Tests
             resultUrl.Document = "123";
             Assert.AreEqual<Url>(resultUrl, url);
         }
+
+        [TestMethod]
+        public void TestWithoutPort()
+        {
+            Url url = new Url();
+            string stringUrl = @"http://www.google.com/123";
+            UrlDecoder.ParceString(stringUrl, ref url);
+            Url resultUrl = new Url();
+            resultUrl.Host = "www.google.com";
+            resultUrl.Port = СomparisonPortProtocol.GetPortByProtocol(ProtocolEnum.HTTP);
+            resultUrl.Protocol = ProtocolEnum.HTTP;
+            resultUrl.Document = "123";
+            Assert.AreEqual<Url>(resultUrl, url);
+        }
     }
 }

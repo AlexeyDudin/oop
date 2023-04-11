@@ -27,8 +27,8 @@ namespace Lab2_5
 
         private static string GetHostPortString(string input)
         {
-            string regularExpression = @"((://)\D*[:/])";
-            return GetStringByReqularExpr(input, regularExpression);
+            string regularExpression = @"/\D*";
+            return GetStringByReqularExpr(input, regularExpression, 3);
         }
 
         private static string ParceDocument(string input, string hostPortString)
@@ -92,10 +92,14 @@ namespace Lab2_5
             }
         }
 
-        private static string GetStringByReqularExpr(string input, string regularExpression)
+        private static string GetStringByReqularExpr(string input, string regularExpression, int position = 0)
         {
             Regex regex = new Regex(regularExpression, RegexOptions.IgnoreCase);
-            var match = regex.Match(input);
+            Match match;
+            if (position == 0)
+                match = regex.Match(input);
+            else
+                match = regex.Matches(input)[position];
             return match.Value;
         }
     }
