@@ -25,7 +25,7 @@ namespace Lab3_Tests
             Assert.IsTrue(car.TurnOnEngine());
             car.SetGear((int)GearSelector.NEUTRAL);
             var result = car.SelectGear;
-            Assert.That(result.Value, Is.EqualTo((int)GearSelector.NEUTRAL));
+            Assert.That(result.Value, Is.EqualTo(GearSelector.NEUTRAL));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Lab3_Tests
             car.SetSpeed(25);
             car.SetGear((int)GearSelector.FIRST);
             var result = car.SelectGear;
-            Assert.That(result.Value, Is.EqualTo((int)GearSelector.FIRST));
+            Assert.That(result.Value, Is.EqualTo(GearSelector.FIRST));
         }
 
         [Test]

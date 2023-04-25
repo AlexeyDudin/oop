@@ -3,7 +3,7 @@
     public enum Direction
     {
         Reverse = -1,
-        Neitral = 0,
+        Neutral = 0,
         Drive = 1
     }
 }

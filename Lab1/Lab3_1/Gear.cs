@@ -2,7 +2,7 @@
 {
     public class Gear
     {
-        public int Value { get; set; }
+        public GearSelector Value { get; set; } //TDO: use GearSelector
         public int MinSpeed { get; set; }
         public int MaxSpeed { get; set; }
     }

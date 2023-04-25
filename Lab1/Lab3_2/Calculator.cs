@@ -1,15 +1,22 @@
-﻿namespace Lab3_2
+﻿using Lab3_2.Interfaces;
+
+namespace Lab3_2
 {
     public class Calculator
     {
-        private Dictionary<string, double?> vars = new Dictionary<string, double?>();
-        private Dictionary<string, Func<double>> functions = new Dictionary<string, Func<double>>();
+        private Dictionary<string, IVarOrFunc> varAndFuncs { get; set; }
+
+        public Calculator() { }
 
         public void DeclareVariable(string name)
         {
-            if (vars.ContainsKey(name))
+            if (varAndFuncs.ContainsKey(name))
                 throw new ArgumentException($"Переменная с именем {name} ранее была объявлена");
-            vars.Add(name, double.NaN);
+            varAndFuncs.Add(name, null);
+        }
+
+        public void SetVariableValue(string name, double value)
+        {
         }
 
     }

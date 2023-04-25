@@ -9,7 +9,7 @@ namespace Lab3_1_Tests
         {
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(-1);
+            car.SetGear((int)GearSelector.REVERSE);
             car.SetSpeed(15);
             car.SetGear(0);
             Assert.IsFalse(car.SetSpeed(20));
@@ -20,9 +20,31 @@ namespace Lab3_1_Tests
         {
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(15);
             car.SetGear(0);
+            Assert.IsFalse(car.SetSpeed(20));
+        }
+
+        [Test]
+        public void Positive_SpeedTest_NeutralGear_SpeedChange()
+        {
+            var car = new Car();
+            car.TurnOnEngine();
+            car.SetGear((int)GearSelector.FIRST);
+            car.SetSpeed(15);
+            car.SetGear((int)GearSelector.NEUTRAL);
+            Assert.IsTrue(car.SetSpeed(10));
+        }
+
+        [Test]
+        public void Negative_SpeedTest_NeutralGear_SpeedChange()
+        {
+            var car = new Car();
+            car.TurnOnEngine();
+            car.SetGear((int)GearSelector.FIRST);
+            car.SetSpeed(15);
+            car.SetGear((int)GearSelector.NEUTRAL);
             Assert.IsFalse(car.SetSpeed(20));
         }
 
@@ -31,7 +53,7 @@ namespace Lab3_1_Tests
         {
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(-1);
+            car.SetGear((int)GearSelector.REVERSE);
             car.SetSpeed(15);
             car.SetGear(0);
             Assert.IsTrue(car.SetSpeed(10));
@@ -42,7 +64,7 @@ namespace Lab3_1_Tests
         {
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(15);
             car.SetGear(0);
             Assert.IsTrue(car.SetSpeed(10));
@@ -81,7 +103,7 @@ namespace Lab3_1_Tests
             var newSpeed = 0;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(-1);
+            car.SetGear((int)GearSelector.REVERSE);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -91,7 +113,7 @@ namespace Lab3_1_Tests
             var newSpeed = 20;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(-1);
+            car.SetGear((int)GearSelector.REVERSE);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -101,7 +123,7 @@ namespace Lab3_1_Tests
             var newSpeed = 21;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(-1);
+            car.SetGear((int)GearSelector.REVERSE);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 
@@ -111,7 +133,7 @@ namespace Lab3_1_Tests
             var newSpeed = 0;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -121,7 +143,7 @@ namespace Lab3_1_Tests
             var newSpeed = 30;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -131,7 +153,7 @@ namespace Lab3_1_Tests
             var newSpeed = 31;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 
@@ -141,9 +163,9 @@ namespace Lab3_1_Tests
             var newSpeed = 20;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(20);
-            car.SetGear(2);
+            car.SetGear((int)GearSelector.SECOND);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -153,9 +175,9 @@ namespace Lab3_1_Tests
             var newSpeed = 50;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(20);
-            car.SetGear(2);
+            car.SetGear((int)GearSelector.SECOND);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -165,9 +187,9 @@ namespace Lab3_1_Tests
             var newSpeed = 19;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(20);
-            car.SetGear(2);
+            car.SetGear((int)GearSelector.SECOND);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 
@@ -177,9 +199,9 @@ namespace Lab3_1_Tests
             var newSpeed = 51;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(20);
-            car.SetGear(2);
+            car.SetGear((int)GearSelector.SECOND);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 
@@ -189,9 +211,9 @@ namespace Lab3_1_Tests
             var newSpeed = 30;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(30);
-            car.SetGear(3);
+            car.SetGear((int)GearSelector.THIRD);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -201,9 +223,9 @@ namespace Lab3_1_Tests
             var newSpeed = 60;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(30);
-            car.SetGear(3);
+            car.SetGear((int)GearSelector.THIRD);
             Assert.IsTrue(car.SetSpeed(newSpeed));
         }
 
@@ -213,9 +235,9 @@ namespace Lab3_1_Tests
             var newSpeed = 29;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(30);
-            car.SetGear(3);
+            car.SetGear((int)GearSelector.THIRD);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 
@@ -225,9 +247,9 @@ namespace Lab3_1_Tests
             var newSpeed = 61;
             var car = new Car();
             car.TurnOnEngine();
-            car.SetGear(1);
+            car.SetGear((int)GearSelector.FIRST);
             car.SetSpeed(20);
-            car.SetGear(2);
+            car.SetGear((int)GearSelector.SECOND);
             Assert.IsFalse(car.SetSpeed(newSpeed));
         }
 

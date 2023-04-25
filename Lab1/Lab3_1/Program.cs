@@ -1,10 +1,9 @@
 ﻿using Lab3_1;
 
-CommandWorker cw = new ();
-Console.WriteLine("Введите команду: ");
+CommandHandler cw = new (Console.In, Console.Out);
 try
 {
-    cw.Work(Console.In, Console.Out);
+    cw.Work();
 }
 catch (Exception ex)
 {
