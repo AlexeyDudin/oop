@@ -6,7 +6,7 @@ namespace Lab3_1
     public class CommandHandler
     {
         private readonly ICar car = new Car();
-        private Dictionary<string, Action<string[]>> CommandDictionary = new();
+        private readonly Dictionary<string, Action<string[]>> CommandDictionary = new();
         private readonly TextWriter _output;
         private readonly TextReader _input;
 
@@ -14,11 +14,7 @@ namespace Lab3_1
         {
             _output = output;
             _input = input;
-            CommandDictionary.Add("Info", PrintCarInfo);
-            CommandDictionary.Add("EngineOn", CarEngineOn);
-            CommandDictionary.Add("EngineOff", CarEngineOff);
-            CommandDictionary.Add("SetGear", CarSetGear);
-            CommandDictionary.Add("SetSpeed", CarSetSpeed);
+            InitializeCommandDictionary();
         }
 
         private void CarEngineOn(string[] splitValues = null) => _output.WriteLine(car.TurnOnEngine() ? "Engine is turn on" : "Can't turn on engine");
@@ -91,6 +87,15 @@ namespace Lab3_1
             _output.WriteLine("EngineOff");
             _output.WriteLine("SetGear");
             _output.WriteLine("SetSpeed");
+        }
+
+        private void InitializeCommandDictionary()
+        {
+            CommandDictionary.Add("Info", PrintCarInfo);
+            CommandDictionary.Add("EngineOn", CarEngineOn);
+            CommandDictionary.Add("EngineOff", CarEngineOff);
+            CommandDictionary.Add("SetGear", CarSetGear);
+            CommandDictionary.Add("SetSpeed", CarSetSpeed);
         }
     }
 }
