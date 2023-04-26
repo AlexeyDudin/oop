@@ -1,11 +1,12 @@
 ﻿using Lab3_2.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Lab3_2
 {
     public class Calculator
     {
         private Dictionary<string, double?> variables = new Dictionary<string, double?>();
-        private Dictionary<string, Func<double>?> functions = new Dictionary<string, Func<double>?>();
+        private Dictionary<string, FunctionHelper> functions = new Dictionary<string, FunctionHelper>();
 
         public Calculator() { }
 
@@ -14,7 +15,7 @@ namespace Lab3_2
             if (variables.ContainsKey(name))
                 throw new ArgumentException($"Переменная с именем {name} ранее была объявлена");
             if (functions.ContainsKey(name))
-                throw new ArgumentException($"Имеется функция с именем {name}");
+                throw new ArgumentException($"Нельзя объявить переменную с данным именем! Имеется функция с именем {name}");
 
             variables.Add(name, double.NaN);
         }
@@ -29,24 +30,49 @@ namespace Lab3_2
         public void SetVariableValue(string name, string value)
         {
             //Если value - это число
-            if (double.TryParse(value, out var doubleValue))
+
+            if (double.TryParse(value.Replace('.', ','), out double doubleValue))
                 SetVariableValue(name, doubleValue);
             else if (variables.ContainsKey(value)) //Если имя value есть среди переменных
-            {
                 SetVariableValue(name, variables[value]);
-            }
             else if (functions.ContainsKey(value)) //Если имя value есть среди функций
-            {
-
-            }
+                ExecuteFunction(functions[value]);
             else
                 throw new ArgumentException($"Неизвестное имя второго параметра");
         }
 
-        public double? GetValiableValue(string name)
+        private double? GetValueFromFunction(string variable)
         {
-            if (!variables.ContainsKey(name))
-                throw new ArgumentException($"Переменной с именем {name} не существует!");
+            double? result = null;
+            double convertedResult;
+            if (!double.TryParse(variable, out convertedResult)) //Если это число
+            {
+                //если не число
+                if (variables.ContainsKey(variable)) //если переменная
+                    result = GetValue(variable);
+                else if (functions.ContainsKey(variable)) //если функция
+                    result = ExecuteFunction(functions[variable]);
+            }
+            else
+                result = convertedResult;
+            return result;
+        }
+
+        private double? ExecuteFunction(FunctionHelper function)
+        {
+            double? firstValue = GetValueFromFunction(function.FirstVar);
+            double? secondValue = GetValueFromFunction(function.SecondVar);
+            if ((firstValue != null && secondValue != null) && (!(firstValue is double.NaN) && !(secondValue is double.NaN)))
+                return function.ExecuteFunction(firstValue.Value, secondValue.Value);
+            return double.NaN;
+        }
+
+        public double? GetValue(string name)
+        {
+            if (!variables.ContainsKey(name) && !functions.ContainsKey(name))
+                throw new ArgumentException($"Переменной или функции с именем {name} не существует!");
+            if (functions.ContainsKey(name))
+                return ExecuteFunction(functions[name]);
             return variables[name];
         }
 
@@ -59,16 +85,29 @@ namespace Lab3_2
             functions.Add(name, null);
         }
 
-        public void SetFunction(string name, Func<double> function) 
+        public void SetFunction(string name, string value) 
         {
             if (!functions.ContainsKey(name))
-                throw new ArgumentException($"Функции с именем {name} не существует!");
-            functions[name] = function;
+                DeclareFunction(name);
+            if (functions.ContainsKey(value))
+                functions[name] = functions[value];
+            else
+                functions[name] = FunctionHelper.Parse(value);
         }
 
         public Dictionary<string, double?> GetAllVariables()
         {
             return variables;
+        }
+        public Dictionary<string, FunctionHelper> GetAllFunctions()
+        {
+            return functions;
+        }
+        public double? PrintFunctionResult(string name)
+        {
+            if (!functions.ContainsKey(name))
+                throw new ArgumentException($"Функции с именем {name} не существует");
+            return ExecuteFunction(functions[name]);
         }
     }
 }

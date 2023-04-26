@@ -28,42 +28,69 @@ namespace Lab3_2
             {
                 _output.Write("Введите команду: ");
                 readString = _intput.ReadLine();
-                if (string.IsNullOrWhiteSpace(readString))
+                try
                 {
-                    _output.WriteLine("Введена пустая строка!");
-                    PrintCommandsHelp();
-                    continue;
+                    if (string.IsNullOrWhiteSpace(readString))
+                    {
+                        _output.WriteLine("Введена пустая строка!");
+                        PrintCommandsHelp();
+                        continue;
+                    }
+
+                    List<string> splitStrings = SplitCommand(readString);
+
+                    if (!Commands.ContainsKey(splitStrings[0]))
+                    {
+                        _output.WriteLine("Не известная комманда");
+                        PrintCommandsHelp();
+                        continue;
+                    }
+
+                    string firstParam = "";
+                    if (splitStrings.Count > 1)
+                        firstParam = splitStrings[1];
+
+                    string secondParam = "";
+                    if (splitStrings.Count > 2)
+                        secondParam = splitStrings[2];
+
+                    if (!IsCommandParamsOk(splitStrings[0], firstParam, secondParam))
+                    {
+                        _output.WriteLine("Не корректные параметры команды");
+                        PrintCommandsHelp();
+                        continue;
+                    }
+
+                    Commands[splitStrings[0]](firstParam, secondParam);
                 }
-
-                string[] splitStrings = readString.Split(' ', '=');
-
-                if (!Commands.ContainsKey(splitStrings[0]))
+                catch (Exception ex)
                 {
-                    _output.WriteLine("Не известная комманда");
-                    PrintCommandsHelp();
-                    continue;
+                    _output.WriteLine(ex.Message);
                 }
-
-                string firstParam = "";
-                if (splitStrings.Length > 1)
-                    firstParam = splitStrings[1];
-
-                string secondParam = "";
-                if (splitStrings.Length > 2)
-                    secondParam = splitStrings[2];
-
-                if (!CheckCommandParams(splitStrings[0], firstParam, secondParam))
-                {
-                    _output.WriteLine("Не корректные параметры команды");
-                    PrintCommandsHelp();
-                    continue;
-                }   
-                
-                Commands[splitStrings[0]](firstParam, secondParam);
             } while (readString != "quit");
         }
 
-        private bool CheckCommandParams(string command, string firstParam, string secondParam)
+        private List<string> SplitCommand(string command)
+        {
+            List<string> result = command.Split(' ', '=').ToList();
+            result.RemoveAll(s => s == "");
+
+            if (result.Count > 3)
+            {
+                for (int i = 3; i < result.Count; i++)
+                {
+                    result[2] += result[i];
+                }
+                while (result.Count != 3)
+                {
+                    result.RemoveAt(3);
+                }
+            }
+
+            return result;
+        }
+
+        private bool IsCommandParamsOk(string command, string firstParam, string secondParam)
         {
             switch (command)
             {
@@ -72,7 +99,12 @@ namespace Lab3_2
                 case "print":
                     return !string.IsNullOrWhiteSpace(firstParam);
                 case "let":
-                    return !string.IsNullOrWhiteSpace(firstParam) ;
+                    return !string.IsNullOrWhiteSpace(firstParam);
+                case "printvars":
+                case "printfns":
+                    return true;
+                case "fn":
+                    return !string.IsNullOrWhiteSpace(firstParam) && !string.IsNullOrWhiteSpace(secondParam);
                 default:
                     return false;
             }
@@ -80,10 +112,12 @@ namespace Lab3_2
 
         private void CalcAddIdentifyer(string name, string value = "") => calculator.DeclareVariable(name);
         private void CalcSetVariable(string name, string value) => calculator.SetVariableValue(name, value);
-        private void PrintVariable(string name, string value = "")
+        private void PrintResult(string name, string value = "")
         {
-            var variableResult = calculator.GetValiableValue(name);
-            if (variableResult == null || variableResult is double.NaN)
+            var variableResult = calculator.GetValue(name);
+            if (variableResult == null)
+                _output.WriteLine("Переменная или функция с таким именем не задана!");
+            else if (variableResult is double.NaN)
                 _output.WriteLine("nan");
             else
                 _output.WriteLine(variableResult.Value);
@@ -93,9 +127,19 @@ namespace Lab3_2
             var allVariables = calculator.GetAllVariables();
             foreach( var variable in allVariables ) 
             {
-                _output.Write($"{variable.Key}:{variable.Value}");
+                _output.WriteLine($"{variable.Key}:{variable.Value}");
             }
         }
+        private void PrintFunctions(string name = "", string value = "")
+        {
+            //TODO отсортировать по имени функции
+            var allFuncs = calculator.GetAllFunctions();
+            foreach (var func in allFuncs)
+            {
+                _output.WriteLine($"{func.Key}:{calculator.GetValue(func.Key)}");
+            }
+        }
+        private void AddFunction(string name, string value) => calculator.SetFunction(name, value);
 
         private void PrintCommandsHelp()
         {
@@ -110,9 +154,11 @@ namespace Lab3_2
         {
             Commands.Clear();
             Commands.Add("var", CalcAddIdentifyer);
-            Commands.Add("print", PrintVariable);
+            Commands.Add("print", PrintResult);
             Commands.Add("let", CalcSetVariable);
+            Commands.Add("fn", AddFunction);
             Commands.Add("printvars", PrintVariables);
+            Commands.Add("printfns", PrintFunctions);
         }
     }
 }
