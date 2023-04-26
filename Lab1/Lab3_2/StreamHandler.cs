@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab3_2.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Lab3_2
     {
         private readonly TextReader _intput;
         private readonly TextWriter _output;
-        private Calculator calculator = new Calculator();
+        private ICalc calculator = new Calculator();
         private Dictionary<string, Action<string, string>> Commands = new Dictionary<string, Action<string, string>>();
         
         public StreamHandler(TextReader intput, TextWriter output)
@@ -121,7 +122,7 @@ namespace Lab3_2
                 _output.WriteLine("nan");
             else
             {
-                _output.WriteLine(variableResult.Value.ToString("0.00"));
+                _output.WriteLine(variableResult.Value.ToString("0.00", System.Globalization.CultureInfo.GetCultureInfo("en-US")));
             }
         }
         private void PrintVariables(string name = "", string value = "")

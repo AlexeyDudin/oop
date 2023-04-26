@@ -3,7 +3,9 @@
     public class FunctionHelper
     {
         public string FirstVar { get; set; } = string.Empty;
+        public int? FirstVarHash { get; set; } = null;
         public string SecondVar { get; set; } = string.Empty;
+        public int? SecondVarHash { get; set; } = null;
         public Operator Operator { get; set; } = Operator.None;
 
         public static FunctionHelper Parse(string value)
@@ -44,10 +46,14 @@
 
         public double ExecuteFunction(double? first, double? second = double.NaN)
         {
-            if (this.Operator != Operator.None && (second == null || second is double.NaN))
-                return double.NaN;
             if ((first == null) || (first is double.NaN))
                 return double.NaN;
+            FirstVarHash = first.GetHashCode();
+
+            if (this.Operator != Operator.None && (second == null || second is double.NaN))
+                return double.NaN;
+            SecondVarHash = second.GetHashCode();
+
             switch (this.Operator)
             {
                 case Operator.Sum:

@@ -4,7 +4,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Lab3_2
 {
-    public class Calculator
+    public class Calculator: ICalc
     {
         private Dictionary<string, double?> variables = new Dictionary<string, double?>();
         private Dictionary<string, FunctionHelper> functions = new Dictionary<string, FunctionHelper>();
@@ -31,7 +31,6 @@ namespace Lab3_2
         public void SetVariableValue(string name, string value)
         {
             //Если value - это число
-
             if (double.TryParse(value.Replace('.', ','), out double doubleValue))
                 SetVariableValue(name, doubleValue);
             else if (variables.ContainsKey(value)) //Если имя value есть среди переменных
@@ -40,30 +39,6 @@ namespace Lab3_2
                 SetVariableValue(name, ExecuteFunction(functions[value]));
             else
                 throw new ArgumentException($"Неизвестное имя второго параметра");
-        }
-
-        private double? GetValueFromFunction(string variable)
-        {
-            double? result = null;
-            double convertedResult;
-            if (!double.TryParse(variable, out convertedResult)) //Если это число
-            {
-                //если не число
-                if (variables.ContainsKey(variable)) //если переменная
-                    result = GetValue(variable);
-                else if (functions.ContainsKey(variable)) //если функция
-                    result = ExecuteFunction(functions[variable]);
-            }
-            else
-                result = convertedResult;
-            return result;
-        }
-
-        private double? ExecuteFunction(FunctionHelper function)
-        {
-            double? firstValue = GetValueFromFunction(function.FirstVar);
-            double? secondValue = GetValueFromFunction(function.SecondVar);
-            return function.ExecuteFunction(firstValue, secondValue);
         }
 
         public double? GetValue(string name)
@@ -108,5 +83,30 @@ namespace Lab3_2
                 throw new ArgumentException($"Функции с именем {name} не существует");
             return ExecuteFunction(functions[name]);
         }
+
+        private double? GetValueFromFunction(string variable)
+        {
+            double? result = null;
+            double convertedResult;
+            if (!double.TryParse(variable, out convertedResult)) //Если это число
+            {
+                //если не число
+                if (variables.ContainsKey(variable)) //если переменная
+                    result = GetValue(variable);
+                else if (functions.ContainsKey(variable)) //если функция
+                    result = ExecuteFunction(functions[variable]);
+            }
+            else
+                result = convertedResult;
+            return result;
+        }
+
+        private double? ExecuteFunction(FunctionHelper function)
+        {
+            double? firstValue = GetValueFromFunction(function.FirstVar);
+            double? secondValue = GetValueFromFunction(function.SecondVar);
+            return function.ExecuteFunction(firstValue, secondValue);
+        }
+
     }
 }
