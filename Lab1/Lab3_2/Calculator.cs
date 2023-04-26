@@ -1,4 +1,5 @@
 ﻿using Lab3_2.Interfaces;
+using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Lab3_2
@@ -36,7 +37,7 @@ namespace Lab3_2
             else if (variables.ContainsKey(value)) //Если имя value есть среди переменных
                 SetVariableValue(name, variables[value]);
             else if (functions.ContainsKey(value)) //Если имя value есть среди функций
-                ExecuteFunction(functions[value]);
+                SetVariableValue(name, ExecuteFunction(functions[value]));
             else
                 throw new ArgumentException($"Неизвестное имя второго параметра");
         }
@@ -62,9 +63,7 @@ namespace Lab3_2
         {
             double? firstValue = GetValueFromFunction(function.FirstVar);
             double? secondValue = GetValueFromFunction(function.SecondVar);
-            if ((firstValue != null && secondValue != null) && (!(firstValue is double.NaN) && !(secondValue is double.NaN)))
-                return function.ExecuteFunction(firstValue.Value, secondValue.Value);
-            return double.NaN;
+            return function.ExecuteFunction(firstValue, secondValue);
         }
 
         public double? GetValue(string name)
@@ -97,11 +96,11 @@ namespace Lab3_2
 
         public Dictionary<string, double?> GetAllVariables()
         {
-            return variables;
+            return variables.OrderBy(v => v.Key).ToDictionary(v => v.Key, v => v.Value);
         }
         public Dictionary<string, FunctionHelper> GetAllFunctions()
         {
-            return functions;
+            return functions.OrderBy(v => v.Key).ToDictionary(v => v.Key, v => v.Value);
         }
         public double? PrintFunctionResult(string name)
         {

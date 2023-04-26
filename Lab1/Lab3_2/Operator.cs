@@ -5,6 +5,7 @@
         Sum,
         Sub,
         Mul,
-        Div
+        Div,
+        None
     }
 }

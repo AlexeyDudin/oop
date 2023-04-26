@@ -4,13 +4,18 @@
     {
         public string FirstVar { get; set; } = string.Empty;
         public string SecondVar { get; set; } = string.Empty;
-        public Operator Operator { get; set; }
+        public Operator Operator { get; set; } = Operator.None;
 
         public static FunctionHelper Parse(string value)
         {
             FunctionHelper helper = new FunctionHelper();
             List<string> splitValues = value.Split(' ', '+', '-', '*', '/').ToList();
             splitValues.RemoveAll(sv => sv == "");
+            if (splitValues.Count == 1)
+            {
+                helper.FirstVar = value;
+                return helper;
+            }
             if (splitValues.Count != 2)
                 throw new ArgumentException($"Не верно задана функция {value}. Должно быть <param1><operator><param2>.");
             helper.FirstVar = splitValues[0];
@@ -37,18 +42,24 @@
             return helper;
         }
 
-        public double ExecuteFunction(double first, double second)
+        public double ExecuteFunction(double? first, double? second = double.NaN)
         {
+            if (this.Operator != Operator.None && (second == null || second is double.NaN))
+                return double.NaN;
+            if ((first == null) || (first is double.NaN))
+                return double.NaN;
             switch (this.Operator)
             {
                 case Operator.Sum:
-                    return first + second;
+                    return first.Value + second.Value;
                 case Operator.Sub:
-                    return first - second;
+                    return first.Value - second.Value;
                 case Operator.Mul:
-                    return first * second;
+                    return first.Value * second.Value;
+                case Operator.Div:
+                    return first.Value / second.Value;
                 default:
-                    return first / second;
+                    return first.Value;
             }
         }
 
@@ -62,8 +73,10 @@
                     return $"{this.FirstVar}-{this.SecondVar}";
                 case Operator.Mul:
                     return $"{this.FirstVar}*{this.SecondVar}";
-                default:
+                case Operator.Div:
                     return $"{this.FirstVar}/{this.SecondVar}";
+                default:
+                    return $"{this.FirstVar}";
             }
         }
     }

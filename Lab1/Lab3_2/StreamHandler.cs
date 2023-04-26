@@ -120,14 +120,18 @@ namespace Lab3_2
             else if (variableResult is double.NaN)
                 _output.WriteLine("nan");
             else
-                _output.WriteLine(variableResult.Value);
+            {
+                _output.WriteLine(variableResult.Value.ToString("0.00"));
+            }
         }
         private void PrintVariables(string name = "", string value = "")
         {
             var allVariables = calculator.GetAllVariables();
             foreach( var variable in allVariables ) 
             {
-                _output.WriteLine($"{variable.Key}:{variable.Value}");
+                _output.Write($"{variable.Key}:");
+                PrintResult(variable.Key);
+                //_output.WriteLine($"{variable.Key}:{Math.Round(variable.Value, 2)}");
             }
         }
         private void PrintFunctions(string name = "", string value = "")
@@ -136,7 +140,9 @@ namespace Lab3_2
             var allFuncs = calculator.GetAllFunctions();
             foreach (var func in allFuncs)
             {
-                _output.WriteLine($"{func.Key}:{calculator.GetValue(func.Key)}");
+                _output.Write($"{func.Key}:");
+                PrintResult(func.Key);
+                //_output.WriteLine($"{func.Key}:{Math.calculator.GetValue(func.Key)}");
             }
         }
         private void AddFunction(string name, string value) => calculator.SetFunction(name, value);
