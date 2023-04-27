@@ -38,6 +38,9 @@ namespace Lab3_2
                         continue;
                     }
 
+                    if (readString == "quit")
+                        break;
+
                     List<string> splitStrings = SplitCommand(readString);
 
                     if (!Commands.ContainsKey(splitStrings[0]))
@@ -132,18 +135,15 @@ namespace Lab3_2
             {
                 _output.Write($"{variable.Key}:");
                 PrintResult(variable.Key);
-                //_output.WriteLine($"{variable.Key}:{Math.Round(variable.Value, 2)}");
             }
         }
         private void PrintFunctions(string name = "", string value = "")
         {
-            //TODO отсортировать по имени функции
             var allFuncs = calculator.GetAllFunctions();
             foreach (var func in allFuncs)
             {
                 _output.Write($"{func.Key}:");
                 PrintResult(func.Key);
-                //_output.WriteLine($"{func.Key}:{Math.calculator.GetValue(func.Key)}");
             }
         }
         private void AddFunction(string name, string value) => calculator.SetFunction(name, value);

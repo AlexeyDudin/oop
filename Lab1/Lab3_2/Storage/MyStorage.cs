@@ -10,9 +10,5 @@ namespace Lab3_2.Storage
     {
         private Dictionary<int, double?> storage = new Dictionary<int, double?>();
 
-        public double? GetVariableByHash(int hash)
-        {
-            storage
-        }
     }
 }
