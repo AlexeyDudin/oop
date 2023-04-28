@@ -13,6 +13,11 @@ namespace Lab4_1.Domain
         {
         }
 
+        public CCircle(string[] splitParams)
+        {
+            
+        }
+
         public double GetArea() => Math.PI * Math.Pow(_radius, 2);
 
         public uint GetFillColor() => _fillColor;

@@ -1,4 +1,5 @@
 ﻿using Lab4_1.Interfaces;
+using Lab4_1.Logic;
 
 namespace Lab4_1.Domain
 {
@@ -6,21 +7,13 @@ namespace Lab4_1.Domain
     {
         private CPoint _startPoint;
         private CPoint _endPoint;
+        private uint _outlineColor;
 
-        public double GetArea()
-        {
-            throw new NotImplementedException();
-        }
+        public double GetArea() => 0;
 
-        public uint GetOutlineColor()
-        {
-            throw new NotImplementedException();
-        }
+        public uint GetOutlineColor() => _outlineColor;
 
-        public double GetPerimeter()
-        {
-            throw new NotImplementedException();
-        }
+        public double GetPerimeter() => Mathematics.PifagorLenght(_startPoint, _endPoint);
 
         public CPoint GetStartPoint() => _startPoint;
         public CPoint GetEndPoint() => _endPoint;
