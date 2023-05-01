@@ -1,4 +1,6 @@
-﻿namespace Lab4_1.Interfaces
+﻿using System;
+
+namespace Lab4_2.Interfaces
 {
     public interface ISolidShape: IShape
     {

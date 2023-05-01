@@ -1,6 +1,8 @@
-﻿using Lab4_1.Interfaces;
+﻿using Lab4Domain.Interfaces;
+using Microsoft.Maui.Graphics;
+using System;
 
-namespace Lab4_1.Domain
+namespace Lab4Domain.Domain
 {
     public class CCircle : ISolidShape
     {
@@ -27,5 +29,10 @@ namespace Lab4_1.Domain
         public double GetPerimeter() => 2 * Math.PI + _radius;
         public CPoint GetCenter() => _center;
         public double GetRadius() => _radius;
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            canvas.DrawCircle((float)_center.x, (float)_center.y, (float)_radius);
+        }
     }
 }

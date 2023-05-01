@@ -1,6 +1,8 @@
-﻿namespace Lab4_1.Interfaces
+﻿using System;
+
+namespace Lab4_2.Interfaces
 {
-    public interface IShape
+    public interface IShape: ICanvasDrawable
     {
         public double GetArea();
         public double GetPerimeter();

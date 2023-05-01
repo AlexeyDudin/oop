@@ -1,6 +1,8 @@
-﻿using Lab4_1.Interfaces;
+﻿using Lab4Domain.Interfaces;
+using Microsoft.Maui.Graphics;
+using System;
 
-namespace Lab4_1.Domain
+namespace Lab4Domain.Domain
 {
     public class CRectangle : ISolidShape
     {
@@ -59,6 +61,18 @@ namespace Lab4_1.Domain
 
             _outlineColor = Convert.ToUInt32(splitParams[5], 16);
             _fillColor = Convert.ToUInt32(splitParams[6], 16);
+        }
+
+        public override string ToString()
+        {
+            return $"rectangle {_topLeftPoint.x} {_topLeftPoint.y} {_bottomRightPoint.x - _topLeftPoint.x} {_bottomRightPoint.y - _topLeftPoint.y} {_outlineColor} {_fillColor}";
+        }
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            canvas.FillColor = Color.FromUint(_fillColor);
+            canvas.StrokeColor = Color.FromUint(_outlineColor);
+            canvas.FillRectangle((float)_topLeftPoint.x, (float)_topLeftPoint.y, (float)GetWidth(), (float)GetHeight());
         }
     }
 }

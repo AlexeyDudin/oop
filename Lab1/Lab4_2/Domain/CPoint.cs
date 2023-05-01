@@ -1,6 +1,12 @@
-﻿namespace Lab4_1.Domain
+﻿using Lab4_2.Interfaces;
+using Lab4_2.Logic;
+using System;
+using System.Windows;
+using System.Windows.Media;
+
+namespace Lab4_2.Domain
 {
-    public class CPoint
+    public class CPoint: DrawingVisual, ICanvasDrawable
     {
         public double x { get; set; } = double.NaN;
         public double y { get; set; } = double.NaN;
@@ -30,6 +36,20 @@
                         throw new ArgumentException("Не верные параметры для объекта CPoint.\nПоддерживаемые параметры: point xCoord yCoord\nгде point - опционально, xCoord и yCoord - типа double");
                 }
             }
+        }
+
+        public void Draw(ICanvas canvas)
+        {
+            using (var drawingContext = RenderOpen())
+            {
+                var pen = new Pen(Brushes.Black, 1);
+                drawingContext.DrawLine(pen, ConvertToWindowsPoint(), ConvertToWindowsPoint());
+            }
+        }
+
+        public System.Windows.Point ConvertToWindowsPoint()
+        {
+            return new System.Windows.Point(x, y);
         }
     }
 }

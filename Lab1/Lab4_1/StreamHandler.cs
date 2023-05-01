@@ -1,10 +1,13 @@
-﻿using Lab4_1.Domain;
+﻿//using Lab4_2;
+using Lab4_2.Domain;
+using Lab4_2.Interfaces;
+using System.IO;
 
 namespace Lab4_1
 {
     public class StreamHandler
     {
-        private List<object> objects { get; set; } = new List<object>();
+        private List<ICanvasDrawable> objects { get; set; } = new List<ICanvasDrawable>();
         private Dictionary<string, Type> objectDictionary = new Dictionary<string, Type>();
         private TextWriter output;
         private TextReader input;
@@ -16,6 +19,7 @@ namespace Lab4_1
             InitializeObjectDictionary();
         }
 
+        [STAThread]
         public void Start() 
         {
             string? readString;
@@ -35,6 +39,7 @@ namespace Lab4_1
                     if (readString == "show")
                     {
                         //TODO! Сделать показ на экран
+                        ShowWindowAsync();
                         continue;
                     }
                     string[] splitParams = readString.Split(" ");
@@ -52,6 +57,16 @@ namespace Lab4_1
                     output.WriteLine(ex.Message);
                 }
             } while (readString != "quit");
+        }
+
+        private void ShowWindowAsync()
+        {
+            Task task = new Task(() =>
+            {
+                //var application = new MainWindow();
+                //application.ShowDialog();
+            });
+            task.Start();
         }
 
         private void InitializeObjectDictionary()

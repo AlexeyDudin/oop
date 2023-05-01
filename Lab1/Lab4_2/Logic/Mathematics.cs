@@ -1,6 +1,7 @@
-﻿using Lab4_1.Domain;
+﻿using Lab4_2.Domain;
+using System;
 
-namespace Lab4_1.Logic
+namespace Lab4_2.Logic
 {
     public static class Mathematics
     {
