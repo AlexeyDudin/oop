@@ -6,5 +6,6 @@ namespace Lab4_2.Interfaces
     public interface ICanvasDrawable
     {
         public void Draw(ICanvas canvas);
+        public void Parse(string[] splitParams);
     }
 }

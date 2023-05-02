@@ -7,9 +7,9 @@ namespace Lab4_2.Domain
 {
     public class CTriangle : DrawingVisual, ISolidShape
     {
-        private CPoint _vertex1;
-        private CPoint _vertex2;
-        private CPoint _vertex3;
+        private CPoint _vertex1 = new CPoint();
+        private CPoint _vertex2 = new CPoint();
+        private CPoint _vertex3 = new CPoint();
 
         private uint _fillColor;
         private uint _outlineColor;
@@ -25,16 +25,7 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            using (var drawingContext = RenderOpen())
-            {
-                var outlineColors = ColorControl.GetColorFromUInt(_outlineColor);
-                var fillColors = ColorControl.GetColorFromUInt(_fillColor);
-
-                var pen = new Pen(new SolidColorBrush(Color.FromRgb(outlineColors[0], outlineColors[1], outlineColors[2])), 1);
-                var fillColor = new SolidColorBrush(Color.FromRgb(fillColors[0], fillColors[1], fillColors[2]));
-
-                //drawingContext.DrawGeometry(fillColor, pen, );
-            }
+            canvas.DrawTriangle(this);
         }
 
         public double GetArea() => Math.Abs((_vertex2.x - _vertex1.x) * (_vertex3.y - _vertex1.y) - (_vertex3.x - _vertex1.x) * (_vertex2.y - _vertex1.y)) / 2;
@@ -55,6 +46,45 @@ namespace Lab4_2.Domain
         public CPoint GetVertex2() => _vertex2;
         public CPoint GetVertex3() => _vertex3;
 
-        
+        public void Parse(string[] splitParams)
+        {
+            if (splitParams == null)
+                throw new ArgumentNullException("Поступившие параметры являются null");
+            if (splitParams.Length != 9)
+                throw new ArgumentOutOfRangeException("Не верное количество входных параметров");
+            if (splitParams[0] != "triangle")
+                throw new ArgumentException($"В объект CTriangle подан не корректный параметр инициализации {string.Join(" ", splitParams)}");
+            double parseResult;
+
+            if (double.TryParse(splitParams[1].Replace('.', ','), out parseResult))
+                _vertex1.x = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+            if (double.TryParse(splitParams[2].Replace('.', ','), out parseResult))
+                _vertex1.y = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+
+            if (double.TryParse(splitParams[3].Replace('.', ','), out parseResult))
+                _vertex2.x = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+            if (double.TryParse(splitParams[4].Replace('.', ','), out parseResult))
+                _vertex2.y = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+            
+            if (double.TryParse(splitParams[5].Replace('.', ','), out parseResult))
+                _vertex3.x = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+            if (double.TryParse(splitParams[6].Replace('.', ','), out parseResult))
+                _vertex3.y = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+
+            _outlineColor = Convert.ToUInt32(splitParams[7], 16);
+            _fillColor = Convert.ToUInt32(splitParams[8], 16);
+        }
     }
 }

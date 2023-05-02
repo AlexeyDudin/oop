@@ -36,5 +36,13 @@ namespace Lab4_2
             this.objects = objects;
             myCanvas = new MyCanvas(canvasForm);
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (var obj in objects)
+            {
+                obj.Draw(myCanvas);
+            }
+        }
     }
 }

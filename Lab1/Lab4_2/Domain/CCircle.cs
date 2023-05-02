@@ -8,7 +8,7 @@ namespace Lab4_2.Domain
 {
     public class CCircle : DrawingVisual, ISolidShape
     {
-        private CPoint _center;
+        private CPoint _center = new CPoint();
         private double _radius;
         private uint _outlineColor;
         private uint _fillColor;
@@ -34,16 +34,35 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            using (var drawingContext = RenderOpen())
-            {
-                var outlineColors = ColorControl.GetColorFromUInt(_outlineColor);
-                var fillColors = ColorControl.GetColorFromUInt(_fillColor);
+            canvas.DrawCircle(this);
+        }
 
-                var pen = new Pen(new SolidColorBrush(Color.FromRgb(outlineColors[0], outlineColors[1], outlineColors[2])), 1);
-                var fillColor = new SolidColorBrush(Color.FromRgb(fillColors[0], fillColors[1], fillColors[2]));
+        public void Parse(string[] splitParams)
+        {
+            if (splitParams == null)
+                throw new ArgumentNullException("Поступившие параметры являются null");
+            if (splitParams.Length != 6)
+                throw new ArgumentOutOfRangeException("Не верное количество входных параметров");
+            if (splitParams[0] != "circle")
+                throw new ArgumentException($"В объект CCircle подан не корректный параметр инициализации {string.Join(" ", splitParams)}");
+            double parseResult;
 
-                drawingContext.DrawEllipse(fillColor, pen, _center.ConvertToWindowsPoint(), _radius, _radius);
-            }
+            if (double.TryParse(splitParams[1].Replace('.', ','), out parseResult))
+                _center.x = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+            if (double.TryParse(splitParams[2].Replace('.', ','), out parseResult))
+                _center.y = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+
+            if (double.TryParse(splitParams[3].Replace('.', ','), out parseResult))
+                _radius = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[3]} в тип double");
+            
+            _outlineColor = Convert.ToUInt32(splitParams[4], 16);
+            _fillColor = Convert.ToUInt32(splitParams[5], 16);
         }
     }
 }

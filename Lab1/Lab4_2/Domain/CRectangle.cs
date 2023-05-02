@@ -10,8 +10,8 @@ namespace Lab4_2.Domain
     {
         private CPoint _topLeftPoint = new CPoint();
         private CPoint _bottomRightPoint = new CPoint();
-        private UInt32 _outlineColor;
-        private UInt32 _fillColor;
+        private uint _outlineColor;
+        private uint _fillColor;
         public CRectangle()
         {
         }
@@ -72,18 +72,7 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            using (var drawingContext = RenderOpen())
-            {
-                var outlineColors = ColorControl.GetColorFromUInt(_outlineColor);
-                var fillColors = ColorControl.GetColorFromUInt(_fillColor);
-
-                var pen = new Pen(new SolidColorBrush(Color.FromRgb(outlineColors[0], outlineColors[1], outlineColors[2])), 1);
-                var fillColor = new SolidColorBrush(Color.FromRgb(fillColors[0], fillColors[1], fillColors[2]));
-
-                Rect rect = new Rect(_topLeftPoint.ConvertToWindowsPoint(), _bottomRightPoint.ConvertToWindowsPoint());
-                
-                drawingContext.DrawRectangle(fillColor, pen, rect);
-            }
+            canvas.DrawRectangle(this);
         }
     }
 }

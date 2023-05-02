@@ -1,4 +1,5 @@
 ﻿//using Lab4_2;
+using Lab4_2;
 using Lab4_2.Domain;
 using Lab4_2.Interfaces;
 using System.IO;
@@ -39,7 +40,7 @@ namespace Lab4_1
                     if (readString == "show")
                     {
                         //TODO! Сделать показ на экран
-                        ShowWindowAsync();
+                        ShowWindow();
                         continue;
                     }
                     string[] splitParams = readString.Split(" ");
@@ -59,14 +60,11 @@ namespace Lab4_1
             } while (readString != "quit");
         }
 
-        private void ShowWindowAsync()
+        [STAThread]
+        private void ShowWindow()
         {
-            Task task = new Task(() =>
-            {
-                //var application = new MainWindow();
-                //application.ShowDialog();
-            });
-            task.Start();
+            var application = new MainWindow(objects);
+            application.ShowDialog();
         }
 
         private void InitializeObjectDictionary()
@@ -75,6 +73,7 @@ namespace Lab4_1
             objectDictionary.Add("triangle", typeof(CTriangle));
             objectDictionary.Add("rectangle", typeof(CRectangle));
             objectDictionary.Add("circle", typeof(CCircle));
+            objectDictionary.Add("line", typeof(CLineSegment));
         }
     }
 }

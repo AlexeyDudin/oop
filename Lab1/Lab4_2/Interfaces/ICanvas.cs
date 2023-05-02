@@ -11,5 +11,10 @@ namespace Lab4_2.Interfaces
         void FillPolygon(List<CPoint> points, uint fillColor);
         void DrawCircle(CPoint center, double radius, uint lineColor);
         void FillCircle(CPoint center, double radius, uint fillColor);
+        void DrawPoint(CPoint point);
+        void DrawLineSegment(CLineSegment line);
+        void DrawCircle(CCircle circle);
+        void DrawRectangle(CRectangle rect);
+        void DrawTriangle(CTriangle triangle);
     }
 }

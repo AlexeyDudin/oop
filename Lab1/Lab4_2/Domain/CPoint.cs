@@ -40,16 +40,32 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            using (var drawingContext = RenderOpen())
-            {
-                var pen = new Pen(Brushes.Black, 1);
-                drawingContext.DrawLine(pen, ConvertToWindowsPoint(), ConvertToWindowsPoint());
-            }
+            canvas.DrawPoint(this);
         }
 
         public System.Windows.Point ConvertToWindowsPoint()
         {
             return new System.Windows.Point(x, y);
+        }
+
+        public void Parse(string[] splitParams)
+        {
+            if (splitParams == null)
+                throw new ArgumentNullException("Поступившие параметры являются null");
+            if (splitParams.Length != 3)
+                throw new ArgumentOutOfRangeException("Не верное количество входных параметров");
+            if (splitParams[0] != "point")
+                throw new ArgumentException($"В объект CPoint подан не корректный параметр инициализации {string.Join(" ", splitParams)}");
+
+            double parseResult;
+            if (double.TryParse(splitParams[1].Replace('.', ','), out parseResult))
+                x = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+            if (double.TryParse(splitParams[2].Replace('.', ','), out parseResult))
+                y = parseResult;
+            else
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
         }
     }
 }
