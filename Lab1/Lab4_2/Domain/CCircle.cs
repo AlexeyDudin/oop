@@ -19,7 +19,7 @@ namespace Lab4_2.Domain
 
         public CCircle(string[] splitParams)
         {
-            
+            Parse(splitParams);
         }
 
         public double GetArea() => Math.PI * Math.Pow(_radius, 2);
@@ -28,7 +28,7 @@ namespace Lab4_2.Domain
 
         public uint GetOutlineColor() => _outlineColor;
 
-        public double GetPerimeter() => 2 * Math.PI + _radius;
+        public double GetPerimeter() => 2 * Math.PI * _radius;
         public CPoint GetCenter() => _center;
         public double GetRadius() => _radius;
 

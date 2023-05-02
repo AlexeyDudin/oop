@@ -75,6 +75,15 @@ namespace Lab4_1Tets
         }
 
         [Test]
+        public void TestToString()
+        {
+            var lineSegment = new CLineSegment();
+            lineSegment.Parse(new string[] { "line", "1.0", "2.0", "3.0", "4.0", "FF0000" });
+            var result = lineSegment.ToString();
+            Assert.AreEqual("line 1 2 3 4 FF0000", result);
+        }
+
+        [Test]
         public void TestParse_Bad_NullArgument()
         {
             var lineSegment = new CLineSegment();
