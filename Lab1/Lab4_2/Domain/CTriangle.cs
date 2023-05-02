@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace Lab4_2.Domain
 {
-    public class CTriangle : DrawingVisual, ISolidShape
+    public class CTriangle : ISolidShape
     {
         private CPoint _vertex1 = new CPoint();
         private CPoint _vertex2 = new CPoint();
@@ -68,23 +68,28 @@ namespace Lab4_2.Domain
             if (double.TryParse(splitParams[3].Replace('.', ','), out parseResult))
                 _vertex2.x = parseResult;
             else
-                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[3]} в тип double");
             if (double.TryParse(splitParams[4].Replace('.', ','), out parseResult))
                 _vertex2.y = parseResult;
             else
-                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[4]} в тип double");
             
             if (double.TryParse(splitParams[5].Replace('.', ','), out parseResult))
                 _vertex3.x = parseResult;
             else
-                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[5]} в тип double");
             if (double.TryParse(splitParams[6].Replace('.', ','), out parseResult))
                 _vertex3.y = parseResult;
             else
-                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+                throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[6]} в тип double");
 
             _outlineColor = Convert.ToUInt32(splitParams[7], 16);
             _fillColor = Convert.ToUInt32(splitParams[8], 16);
+        }
+
+        public override string ToString()
+        {
+            return $"triangle {_vertex1.x} {_vertex1.y} {_vertex2.x} { _vertex2.y} {_vertex3.x} {_vertex3.y} {_outlineColor.ToString("X")} {_fillColor.ToString("X")}";
         }
     }
 }

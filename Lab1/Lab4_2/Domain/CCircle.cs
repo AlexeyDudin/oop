@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Lab4_2.Domain
 {
-    public class CCircle : DrawingVisual, ISolidShape
+    public class CCircle : ISolidShape
     {
         private CPoint _center = new CPoint();
         private double _radius;
@@ -63,6 +63,11 @@ namespace Lab4_2.Domain
             
             _outlineColor = Convert.ToUInt32(splitParams[4], 16);
             _fillColor = Convert.ToUInt32(splitParams[5], 16);
+        }
+
+        public override string ToString()
+        {
+            return $"circle {_center.x} {_center.y} {_radius} {_outlineColor.ToString("X")} {_fillColor.ToString("X")}";
         }
     }
 }

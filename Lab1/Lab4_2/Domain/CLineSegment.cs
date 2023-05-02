@@ -7,11 +7,20 @@ using System.Windows.Media;
 
 namespace Lab4_2.Domain
 {
-    public class CLineSegment : DrawingVisual, IShape
+    public class CLineSegment : IShape
     {
         private CPoint _startPoint = new CPoint();
         private CPoint _endPoint = new CPoint();
         private uint _outlineColor;
+
+        public CLineSegment() { }
+
+        public CLineSegment(CPoint startPoint, CPoint endPoint, uint outlineColor)
+        { 
+            _startPoint = startPoint;
+            _endPoint = endPoint;
+            _outlineColor = outlineColor;
+        }
 
         public double GetArea() => 0;
 
@@ -56,6 +65,11 @@ namespace Lab4_2.Domain
                 throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[4]} в тип double");
 
             _outlineColor = Convert.ToUInt32(splitParams[5], 16);
+        }
+
+        public override string ToString()
+        {
+            return $"line {_startPoint.x} {_startPoint.y} {_endPoint.x} {_endPoint.y} {_outlineColor.ToString("X")}";
         }
     }
 }

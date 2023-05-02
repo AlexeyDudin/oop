@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Lab4_2.Domain
 {
-    public class CPoint: DrawingVisual, ICanvasDrawable
+    public class CPoint: ICanvasDrawable
     {
         public double x { get; set; } = double.NaN;
         public double y { get; set; } = double.NaN;
@@ -66,6 +66,11 @@ namespace Lab4_2.Domain
                 y = parseResult;
             else
                 throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[1]} в тип double");
+        }
+
+        public override string ToString()
+        {
+            return $"point {x} {y}";
         }
     }
 }

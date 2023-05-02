@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Lab4_2.Domain
 {
-    public class CRectangle : DrawingVisual, ISolidShape
+    public class CRectangle : ISolidShape
     {
         private CPoint _topLeftPoint = new CPoint();
         private CPoint _bottomRightPoint = new CPoint();
@@ -67,7 +67,7 @@ namespace Lab4_2.Domain
 
         public override string ToString()
         {
-            return $"rectangle {_topLeftPoint.x} {_topLeftPoint.y} {_bottomRightPoint.x - _topLeftPoint.x} {_bottomRightPoint.y - _topLeftPoint.y} {_outlineColor} {_fillColor}";
+            return $"rectangle {_topLeftPoint.x} {_topLeftPoint.y} {_bottomRightPoint.x - _topLeftPoint.x} {_bottomRightPoint.y - _topLeftPoint.y} {_outlineColor.ToString("X")} {_fillColor.ToString("X")}";
         }
 
         public void Draw(ICanvas canvas)
