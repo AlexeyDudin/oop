@@ -4,8 +4,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Lab3_2
 {
-    public class Calculator: ICalc
+    public class Calculator: ICalc //Интерфейс ICalc не нужен здесь! Если нет пользователя интерфейса - то интерфейс бесполезен 
     {
+        //Использовать стиль _variables и т.д.
         private Dictionary<string, double?> variables = new Dictionary<string, double?>();
         private Dictionary<string, FunctionHelper> functions = new Dictionary<string, FunctionHelper>();
 
@@ -28,7 +29,7 @@ namespace Lab3_2
             variables[name] = value;
         }
 
-        public void SetVariableValue(string name, string value)
+        public void SetVariableValue(string name, string value) //Убрать парсинг
         {
             //Если value - это число
             if (double.TryParse(value.Replace('.', ','), out double doubleValue))
@@ -103,6 +104,8 @@ namespace Lab3_2
 
         private double? ExecuteFunction(FunctionHelper function)
         {
+            //fn f5 = f5
+            //Запретить переопределять функции
             double? firstValue = GetValueFromFunction(function.FirstVar);
             double? secondValue = GetValueFromFunction(function.SecondVar);
             return function.ExecuteFunction(firstValue, secondValue);

@@ -7,6 +7,8 @@ namespace Lab4_2.Logic
     {
         public static double PifagorLenght(CPoint firstPoint, CPoint secondPoint)
         {
+            //delta x1,x2; delta y1,y2
+
             CPoint correctedCoordinatesFirstPoint = firstPoint;
             CPoint correctedCoordinatesSecondPoint = secondPoint;
 

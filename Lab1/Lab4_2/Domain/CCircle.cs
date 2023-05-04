@@ -8,7 +8,8 @@ namespace Lab4_2.Domain
 {
     public class CCircle : ISolidShape
     {
-        private CPoint _center = new CPoint();
+        //А если точка была скопирована из другого объекта?
+        private readonly CPoint _center = new CPoint();
         private double _radius;
         private uint _outlineColor;
         private uint _fillColor;
@@ -17,6 +18,7 @@ namespace Lab4_2.Domain
         {
         }
 
+        //Убрать парсинг
         public CCircle(string[] splitParams)
         {
             Parse(splitParams);
@@ -34,7 +36,9 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            canvas.DrawCircle(this);
+            canvas.DrawCircle(GetCenter(), GetRadius(), GetOutlineColor());
+            canvas.FillCircle(GetCenter(), GetRadius(), GetFillColor());
+            //canvas.DrawCircle(this);
         }
 
         public void Parse(string[] splitParams)

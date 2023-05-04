@@ -1,5 +1,6 @@
 ﻿namespace Lab3_2
 {
+    //Убрать парсинг, хранить ссылки на переменные/функции
     public class FunctionHelper
     {
         public string FirstVar { get; set; } = string.Empty;

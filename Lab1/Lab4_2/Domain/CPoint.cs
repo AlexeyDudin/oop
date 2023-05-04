@@ -40,7 +40,8 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            canvas.DrawPoint(this);
+            canvas.DrawCircle(this, 1, 0);
+            //canvas.DrawPoint(this);
         }
 
         public System.Windows.Point ConvertToWindowsPoint()

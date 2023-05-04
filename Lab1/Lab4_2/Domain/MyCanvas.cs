@@ -31,6 +31,7 @@ namespace Lab4_2.Domain
             canvas.Children.Add(element);
         }
 
+        //Убрать сделать вызовом двух методов
         public void DrawCircle(CCircle circle)
         {
             var element = new System.Windows.Shapes.Ellipse();

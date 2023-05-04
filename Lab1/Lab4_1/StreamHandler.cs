@@ -39,7 +39,6 @@ namespace Lab4_1
                         break;
                     if (readString == "show")
                     {
-                        //TODO! Сделать показ на экран
                         ShowWindow();
                         continue;
                     }

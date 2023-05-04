@@ -1,6 +1,6 @@
 ﻿namespace Lab5_1
 {
-    public class CDate
+    public class CDate: ICalendar
     {
         private readonly Dictionary<YearType, ulong> typeYear = new Dictionary<YearType, ulong>() { { YearType.NOT_LEAP, 365 }, { YearType.LEAP, 366 }};
         private readonly Dictionary<Month, ulong> dayInMonth = new Dictionary<Month, ulong>() 
@@ -25,7 +25,24 @@
         {
             if ((year < 1970) || (year > 9999))
                 throw new ArgumentException($"Год {year} не в диапазоне 1970-9999");
-
+            if (day <= 0)
+                throw new ArgumentException($"Дня под номером {day} не существует");
+            if (month != Month.FEBRUARY && day > dayInMonth[month])
+                throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+            else
+            {
+                if (GetYearType(year) == YearType.NOT_LEAP)
+                {
+                    if (day > dayInMonth[month])
+                        throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                }
+                else
+                {
+                    if (day > 29)
+                        throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                }
+            }
+            _timestamp = (ulong)(day - 1) + GetDaysBeforeMonth(month, year) + GetDaysBeforeYear(year);
         }
 
         public CDate(ulong timestamp)
@@ -35,12 +52,28 @@
 
         public ushort GetDay()
         {
-            throw new NotImplementedException();
+            return (ushort)(GetModOfMonth() + 1);
         }
 
         public Month GetMonth()
         {
-            throw new NotImplementedException();
+            var tempDays = GetModOfYears();
+            ulong subDays = 0;
+            Month month = Month.JANUARY;
+            ushort year = GetYear();
+            while (tempDays > 0)
+            {
+                if (month == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
+                    subDays = 29;
+                else
+                    subDays = dayInMonth[month];
+                
+                if (tempDays < subDays)
+                    return month;
+                tempDays -= subDays;
+                month++;
+            }
+            return month;
         }
 
         public ushort GetYear()
@@ -49,11 +82,21 @@
             ushort tempYear = startYear;
             while (tempTimeStamp > 0)
             {
+                if (tempTimeStamp < typeYear[GetYearType(tempYear)])
+                    break;
                 tempTimeStamp -= typeYear[GetYearType(tempYear)];
-                if (tempTimeStamp > 0)
+                if (tempTimeStamp >= 0)
                     tempYear++;
             }
             return tempYear;
+        }
+
+        public WeekDay GetWeekDay()
+        {
+            var modOfDays = (_timestamp % 7) - 1;
+            if (modOfDays < 0)
+                modOfDays += 7;
+            return (WeekDay)(((int)WeekDay.THURSDAY + modOfDays) % 7);
         }
 
         private YearType GetYearType(ushort year)
@@ -63,6 +106,67 @@
             if (year % 100 != 0)
                 return YearType.LEAP;
             return (year % 400 == 0) ? YearType.LEAP: YearType.NOT_LEAP;
+        }
+
+        private ulong GetModOfYears()
+        {
+            ulong tempTimeStamp = _timestamp;
+            ushort tempYear = startYear;
+            while (tempTimeStamp > 0)
+            {
+                var days = typeYear[GetYearType(tempYear)];
+                if (tempTimeStamp < days)
+                    return tempTimeStamp;
+                tempTimeStamp -= days;
+                tempYear++;
+            }
+            return 0;
+        }
+
+        private ushort GetModOfMonth()
+        {
+            var tempDays = GetModOfYears();
+            ulong subDays = 0;
+            Month month = Month.JANUARY;
+            ushort year = GetYear();
+            while (tempDays > 0)
+            {
+                if (month == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
+                    subDays = 29;
+                else
+                    subDays = dayInMonth[month];
+                if (tempDays < subDays)
+                    return (ushort)tempDays;
+                tempDays -= subDays;
+                month++;
+            }
+            return 0;
+        }
+
+        private ulong GetDaysBeforeMonth(Month month, ushort year)
+        {
+            ulong result = 0;
+            Month currMonth = Month.JANUARY;
+            while (currMonth != month)
+            {
+                if (currMonth == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
+                    result += 29;
+                else
+                    result += (ushort)dayInMonth[currMonth];
+                currMonth++;
+            }
+            return result;
+        }
+        private ulong GetDaysBeforeYear(ushort year)
+        {
+            ulong result = 0;
+            ushort currYear = startYear;
+            while (currYear != year)
+            {
+                result += typeYear[GetYearType(currYear)];
+                currYear++;
+            }
+            return result;
         }
     }
 

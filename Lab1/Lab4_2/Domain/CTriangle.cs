@@ -1,6 +1,8 @@
 ﻿using Lab4_2.Interfaces;
 using Lab4_2.Logic;
 using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Lab4_2.Domain
@@ -18,6 +20,7 @@ namespace Lab4_2.Domain
         {
         }
 
+        //TODO
         public CTriangle(string[] splitParams)
         {
             
@@ -25,7 +28,17 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            canvas.DrawTriangle(this);
+            canvas.DrawLine(GetVertex1(), GetVertex2(), GetOutlineColor());
+            canvas.DrawLine(GetVertex2(), GetVertex3(), GetOutlineColor());
+            canvas.DrawLine(GetVertex3(), GetVertex1(), GetOutlineColor());
+            var pointCollection = new List<CPoint>()
+            {
+                GetVertex1(),
+                GetVertex2(),
+                GetVertex3()
+            };
+            canvas.FillPolygon(pointCollection, GetFillColor());
+            //canvas.DrawTriangle(this);
         }
 
         public double GetArea() => Math.Abs((_vertex2.x - _vertex1.x) * (_vertex3.y - _vertex1.y) - (_vertex3.x - _vertex1.x) * (_vertex2.y - _vertex1.y)) / 2;
@@ -48,6 +61,8 @@ namespace Lab4_2.Domain
 
         public void Parse(string[] splitParams)
         {
+            //Убрать одинаковые функции в цикл
+            //Декомпозировать на несколько методов
             if (splitParams == null)
                 throw new ArgumentNullException("Поступившие параметры являются null");
             if (splitParams.Length != 9)
@@ -64,6 +79,7 @@ namespace Lab4_2.Domain
                 _vertex1.y = parseResult;
             else
                 throw new ArgumentException($"Невозможно преобразовать параметр {splitParams[2]} в тип double");
+
 
             if (double.TryParse(splitParams[3].Replace('.', ','), out parseResult))
                 _vertex2.x = parseResult;
@@ -89,6 +105,7 @@ namespace Lab4_2.Domain
 
         public override string ToString()
         {
+            //Улучшить читаемость.
             return $"triangle {_vertex1.x} {_vertex1.y} {_vertex2.x} { _vertex2.y} {_vertex3.x} {_vertex3.y} {_outlineColor.ToString("X")} {_fillColor.ToString("X")}";
         }
     }

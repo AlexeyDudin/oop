@@ -82,11 +82,15 @@ namespace Lab3_1
         private void PrintHelp()
         {
             _output.WriteLine("Available command\'s:");
-            _output.WriteLine("Info");
-            _output.WriteLine("EngineOn");
-            _output.WriteLine("EngineOff");
-            _output.WriteLine("SetGear");
-            _output.WriteLine("SetSpeed");
+            foreach (var command in CommandDictionary)
+            {
+                _output.WriteLine(command.Key);
+            }
+            //_output.WriteLine("Info");
+            //_output.WriteLine("EngineOn");
+            //_output.WriteLine("EngineOff");
+            //_output.WriteLine("SetGear");
+            //_output.WriteLine("SetSpeed");
         }
 
         private void InitializeCommandDictionary()

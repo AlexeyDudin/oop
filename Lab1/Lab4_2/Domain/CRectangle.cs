@@ -1,7 +1,9 @@
 ﻿using Lab4_2.Interfaces;
 using Lab4_2.Logic;
 using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Lab4_2.Domain
@@ -72,7 +74,25 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            canvas.DrawRectangle(this);
+            var point1 = new CPoint(_topLeftPoint.x, _topLeftPoint.y);
+            var point2 = new CPoint(_bottomRightPoint.x, _topLeftPoint.y);
+            var point3 = new CPoint(_bottomRightPoint.x, _bottomRightPoint.y);
+            var point4 = new CPoint(_topLeftPoint.x, _bottomRightPoint.y);
+            
+            canvas.DrawLine(point1, point2, GetOutlineColor());
+            canvas.DrawLine(point2, point3, GetOutlineColor());
+            canvas.DrawLine(point3, point4, GetOutlineColor());
+            canvas.DrawLine(point4, point1, GetOutlineColor());
+
+            var pointList = new List<CPoint>()
+            {
+                point1,
+                point2,
+                point3,
+                point4
+            };
+            canvas.FillPolygon(pointList, GetFillColor());
+            //canvas.DrawRectangle(this);
         }
     }
 }

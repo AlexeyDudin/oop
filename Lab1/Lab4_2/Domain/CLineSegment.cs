@@ -33,7 +33,8 @@ namespace Lab4_2.Domain
 
         public void Draw(ICanvas canvas)
         {
-            canvas.DrawLineSegment(this);
+            canvas.DrawLine(GetStartPoint(), GetEndPoint(), GetOutlineColor());
+            //canvas.DrawLineSegment(this);
         }
 
         public void Parse(string[] splitParams)
