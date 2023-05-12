@@ -6,5 +6,6 @@
         public Month GetMonth();
         public ushort GetYear();
         public WeekDay GetWeekDay();
+        public bool IsValid();
     }
 }

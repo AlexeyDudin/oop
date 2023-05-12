@@ -30,12 +30,10 @@ namespace Lab5_1Test
         [TestCase((ushort)0, Month.JANUARY, (ushort)1970)]
         [TestCase((ushort)29, Month.FEBRUARY, (ushort)1970)]
         [TestCase((ushort)29, Month.FEBRUARY, (ushort)1960)]
-        [TestCase((ushort)31, Month.DECEMBER, (ushort)1970)]
-        [TestCase((ushort)1, Month.JANUARY, (ushort)1971)]
-        [TestCase((ushort)29, Month.FEBRUARY, (ushort)2000)]
+        [TestCase((ushort)1, Month.JANUARY, (ushort)10000)]
         public void DateManyParams_Bad(ushort day, Month month, ushort year)
         {
-            Assert.Throws< ArgumentException >(() => new CDate(day, month, year));
+            Assert.IsFalse((new CDate(day, month, year)).IsValid());
         }
 
         [Test]
@@ -56,19 +54,119 @@ namespace Lab5_1Test
             Assert.AreEqual(expectedYear, date.GetYear());
         }
 
-        //[Test]
-        //[TestCase(12)]
-        //[TestCase(12)]
-        //[TestCase(12)]
-        //[TestCase(12)]
-        //[TestCase(12)]
-        //public void DateFromTimestamp_NextEndMonth_OK(ulong timeStamp)
-        //{
-        //    CDate date = new CDate(timeStamp);
+        [Test]
+        [TestCase((ulong)2932897)]
+        public void DateFromTimestamp_Bad(ulong timeStamp)
+        {
+            CDate date = new CDate(timeStamp);
+            Assert.IsFalse(date.IsValid());
+        }
 
-        //    Assert.AreEqual(1, date.GetDay());
-        //    Assert.AreEqual(Month.FEBRUARY, date.GetMonth());
-        //    Assert.AreEqual(1970, date.GetYear());
-        //}
+        [Test]
+        [TestCase((ulong)0, (ulong)0, (ulong)0)]
+        [TestCase((ulong)0, (ulong)1, (ulong)1)]
+        [TestCase((ulong)2932895, (ulong)1, (ulong)2932896)]
+        public void OperatorSummTests_OK(ulong timeStamp, ulong days, ulong expectedDays)
+        {
+            CDate date = new CDate(timeStamp);
+            date += days;
+            Assert.AreEqual(expectedDays, date.GetTimeStamp());
+        }
+
+        [Test]
+        [TestCase((ulong)2932896, (ulong)1)]
+        public void OperatorSummTests_Bad(ulong timeStamp, ulong days)
+        {
+            CDate date = new CDate(timeStamp);
+            date += days;
+            Assert.IsFalse(date.IsValid());
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)0, (ulong)0)]
+        [TestCase((ulong)1, (ulong)1, (ulong)0)]
+        [TestCase((ulong)2932896, (ulong)2932896, (ulong)0)]
+        public void OperatorSubTests_OK(ulong timeStamp, ulong days, ulong expectedDays)
+        {
+            CDate date = new CDate(timeStamp);
+            date -= days;
+            Assert.AreEqual(expectedDays, date.GetTimeStamp());
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        public void OperatorSubTests_Bad(ulong timeStamp, ulong days)
+        {
+            CDate date = new CDate(timeStamp);
+            date -= days;
+            Assert.IsFalse(date.IsValid());
+        }
+
+        [Test]
+        [TestCase((ulong)0)]
+        public void OperatorEqualsTests_Ok(ulong timeStamp)
+        {
+            CDate dateFirst = new CDate(timeStamp);
+            CDate dateSecond = new CDate(timeStamp);
+            Assert.IsTrue(dateFirst == dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        public void OperatorNotEqualsTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsTrue(dateFirst != dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        public void OperatorLessTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsTrue(dateFirst < dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)1, (ulong)0)]
+        public void OperatorMoreTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsTrue(dateFirst > dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        [TestCase((ulong)1, (ulong)1)]
+        public void OperatorLessOrEqualTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsTrue(dateFirst <= dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)1, (ulong)0)]
+        [TestCase((ulong)1, (ulong)1)]
+        public void OperatorMoreOrEqualTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsTrue(dateFirst >= dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, "01.01.1970")]
+        [TestCase((ulong)1, "02.01.1970")]
+        public void ConsoleWriterTests_Ok(ulong firstTimeStamp, string stringDate)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            StringWriter sw = new StringWriter();
+            sw.Write(dateFirst);
+            Assert.IsTrue(sw.ToString() == stringDate);
+        }
     }
 }

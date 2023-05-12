@@ -1,4 +1,6 @@
-﻿namespace Lab5_1
+﻿using System.Text;
+
+namespace Lab5_1
 {
     public class CDate: ICalendar
     {
@@ -19,27 +21,50 @@
             { Month.DECEMBER, 31 },
         };
         private const int startYear = 1970;
+        private const int lastYear = 9999;
+        private const ulong maxTimeStamp = 2932897;
         private ulong _timestamp = 0;
+        private bool isValid = true;
 
         public CDate(ushort day, Month month, ushort year) 
         {
-            if ((year < 1970) || (year > 9999))
-                throw new ArgumentException($"Год {year} не в диапазоне 1970-9999");
+            if ((year < startYear) || (year > lastYear))
+            {
+                isValid = false;
+                return;
+                //throw new ArgumentException($"Год {year} не в диапазоне 1970-9999");
+            }
             if (day <= 0)
-                throw new ArgumentException($"Дня под номером {day} не существует");
+            {
+                isValid = false;
+                return;
+                //throw new ArgumentException($"Дня под номером {day} не существует");
+            }
             if (month != Month.FEBRUARY && day > dayInMonth[month])
-                throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+            {
+                isValid = false;
+                return;
+                //throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+            }
             else
             {
                 if (GetYearType(year) == YearType.NOT_LEAP)
                 {
                     if (day > dayInMonth[month])
-                        throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                    {
+                        isValid = false;
+                        return;
+                        //throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                    }
                 }
                 else
                 {
                     if (day > 29)
-                        throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                    {
+                        isValid = false;
+                        return;
+                        //throw new ArgumentException($"Дня под номером {day} в месяце {month} {year} года не существует!");
+                    }
                 }
             }
             _timestamp = (ulong)(day - 1) + GetDaysBeforeMonth(month, year) + GetDaysBeforeYear(year);
@@ -47,8 +72,15 @@
 
         public CDate(ulong timestamp)
         {
+            if (timestamp >= maxTimeStamp)
+            {
+                isValid = false;
+                return;
+            }
             _timestamp = timestamp;
         }
+
+        public ulong GetTimeStamp() => _timestamp;
 
         public ushort GetDay()
         {
@@ -97,6 +129,75 @@
             if (modOfDays < 0)
                 modOfDays += 7;
             return (WeekDay)(((int)WeekDay.THURSDAY + modOfDays) % 7);
+        }
+
+        public bool IsValid()
+        {
+            return isValid;
+        }
+
+        public static CDate operator ++(CDate dateFirst)
+        {
+            return new CDate(dateFirst._timestamp + 1);
+        }
+        public static CDate operator +(CDate dateFirst, ulong days)
+        {
+            return new CDate(dateFirst._timestamp + days);
+        }
+
+        public static CDate operator --(CDate dateFirst)
+        {
+            if (dateFirst._timestamp == 0)
+                return new CDate(0) { isValid = false };
+            return new CDate(dateFirst._timestamp - 1);
+        }
+        public static CDate operator -(CDate dateFirst, ulong days)
+        {
+            if (dateFirst._timestamp < days)
+                return new CDate(0) { isValid = false };
+            return new CDate(dateFirst._timestamp - days);
+        }
+
+        public static bool operator ==(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp == dateSecond._timestamp;
+        }
+        public static bool operator !=(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp != dateSecond._timestamp;
+        }
+
+        public static bool operator <(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp < dateSecond._timestamp;
+        }
+        public static bool operator >(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp > dateSecond._timestamp;
+        }
+        public static bool operator <=(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp <= dateSecond._timestamp;
+        }
+        public static bool operator >=(CDate dateFirst, CDate dateSecond)
+        {
+            return dateFirst._timestamp >= dateSecond._timestamp;
+        }
+
+        public static implicit operator string(CDate date)
+        {
+            return string.Format("{0,2:00}.{1,2:00}.{2,4:0000}", date.GetDay(), (uint)date.GetMonth(), date.GetYear());
+        }
+
+        public static explicit operator CDate(string dateString)
+        {
+            string[] parameters = dateString.Split('.');
+            if (parameters.Length != 3)
+                return new CDate(0, Month.JANUARY, 1969);
+            ushort day = ushort.Parse(parameters[0]);
+            ushort month = ushort.Parse(parameters[1]);
+            ushort year = ushort.Parse(parameters[2]);
+            return new CDate(day, (Month)month, year);
         }
 
         private YearType GetYearType(ushort year)
