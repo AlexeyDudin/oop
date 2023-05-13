@@ -168,5 +168,14 @@ namespace Lab5_1Test
             sw.Write(dateFirst);
             Assert.IsTrue(sw.ToString() == stringDate);
         }
+
+        [Test]
+        [TestCase("01.01.1970", (ulong)0)]
+        [TestCase("02.01.1970", (ulong)1)]
+        public void ConsoleReaderTests_Ok(string stringDate, ulong expectedTimestamp)
+        {
+            CDate dateFirst = (CDate)stringDate;
+            Assert.AreEqual(expectedTimestamp, dateFirst.GetTimeStamp());
+        }
     }
 }
