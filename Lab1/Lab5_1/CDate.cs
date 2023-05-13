@@ -194,10 +194,17 @@ namespace Lab5_1
             string[] parameters = dateString.Split('.');
             if (parameters.Length != 3)
                 return new CDate(0, Month.JANUARY, 1969);
-            ushort day = ushort.Parse(parameters[0]);
-            ushort month = ushort.Parse(parameters[1]);
-            ushort year = ushort.Parse(parameters[2]);
-            return new CDate(day, (Month)month, year);
+            try
+            {
+                ushort day = ushort.Parse(parameters[0]);
+                ushort month = ushort.Parse(parameters[1]);
+                ushort year = ushort.Parse(parameters[2]);
+                return new CDate(day, (Month)month, year);
+            }
+            catch (Exception ex)
+            {
+                return new CDate(0, Month.JANUARY, 1969);
+            }
         }
 
         private YearType GetYearType(ushort year)
