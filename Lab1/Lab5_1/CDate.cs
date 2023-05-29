@@ -2,33 +2,16 @@
 
 namespace Lab5_1
 {
-    public class CDate: ICalendar
+    public class CDate
     {
-        private readonly Dictionary<YearType, ulong> typeYear = new Dictionary<YearType, ulong>() { { YearType.NOT_LEAP, 365 }, { YearType.LEAP, 366 }};
-        private readonly Dictionary<Month, ulong> dayInMonth = new Dictionary<Month, ulong>() 
-        { 
-            { Month.JANUARY, 31 }, 
-            { Month.FEBRUARY, 28 },
-            { Month.MARCH, 31 },
-            { Month.APRIL, 30 },
-            { Month.MAY, 31 },
-            { Month.JUNE, 30 },
-            { Month.JULY, 31 },
-            { Month.AUGUST, 31 },
-            { Month.SEPTEMBER, 30},
-            { Month.OCTOBER, 31 },
-            { Month.NOVEMBER, 30 },
-            { Month.DECEMBER, 31 },
-        };
-        private const int startYear = 1970;
-        private const int lastYear = 9999;
-        private const ulong maxTimeStamp = 2932897;
+        //CDate helper static
+        
         private ulong _timestamp = 0;
         private bool isValid = true;
 
         public CDate(ushort day, Month month, ushort year) 
         {
-            if ((year < startYear) || (year > lastYear))
+            if ((year < CDateDataHelper.StartYear) || (year > CDateDataHelper.LastYear))
             {
                 isValid = false;
                 return;
@@ -40,7 +23,7 @@ namespace Lab5_1
                 return;
                 //throw new ArgumentException($"Дня под номером {day} не существует");
             }
-            if (month != Month.FEBRUARY && day > dayInMonth[month])
+            if (month != Month.FEBRUARY && day > CDateDataHelper.DayInMonth[month])
             {
                 isValid = false;
                 return;
@@ -50,7 +33,7 @@ namespace Lab5_1
             {
                 if (GetYearType(year) == YearType.NOT_LEAP)
                 {
-                    if (day > dayInMonth[month])
+                    if (day > CDateDataHelper.DayInMonth[month])
                     {
                         isValid = false;
                         return;
@@ -72,7 +55,7 @@ namespace Lab5_1
 
         public CDate(ulong timestamp)
         {
-            if (timestamp >= maxTimeStamp)
+            if (timestamp >= CDateDataHelper.MaxTimeStamp)
             {
                 isValid = false;
                 return;
@@ -98,7 +81,7 @@ namespace Lab5_1
                 if (month == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
                     subDays = 29;
                 else
-                    subDays = dayInMonth[month];
+                    subDays = CDateDataHelper.DayInMonth[month];
                 
                 if (tempDays < subDays)
                     return month;
@@ -108,19 +91,23 @@ namespace Lab5_1
             return month;
         }
 
+        //Обойтись без цикла
         public ushort GetYear()
         {
-            ulong tempTimeStamp = _timestamp;
-            ushort tempYear = startYear;
-            while (tempTimeStamp > 0)
-            {
-                if (tempTimeStamp < typeYear[GetYearType(tempYear)])
-                    break;
-                tempTimeStamp -= typeYear[GetYearType(tempYear)];
-                if (tempTimeStamp >= 0)
-                    tempYear++;
-            }
-            return tempYear;
+            //ulong tempTimeStamp = _timestamp;
+            ////ushort countYears =
+            ////    (ushort)((_timestamp + countOfLeapYear) % 365);
+            //ushort tempYear = CDateDataHelper.StartYear;
+            //while (tempTimeStamp > 0)
+            //{
+            //    if (tempTimeStamp < CDateDataHelper.TypeYear[GetYearType(tempYear)])
+            //        break;
+            //    tempTimeStamp -= CDateDataHelper.TypeYear[GetYearType(tempYear)];
+            //    if (tempTimeStamp >= 0)
+            //        tempYear++;
+            //}
+            //return tempYear;
+            return (ushort)(CDateDataHelper.StartYear + (ushort)(((float)_timestamp / 365.2425))); ;
         }
 
         public WeekDay GetWeekDay()
@@ -219,10 +206,10 @@ namespace Lab5_1
         private ulong GetModOfYears()
         {
             ulong tempTimeStamp = _timestamp;
-            ushort tempYear = startYear;
+            ushort tempYear = CDateDataHelper.StartYear;
             while (tempTimeStamp > 0)
             {
-                var days = typeYear[GetYearType(tempYear)];
+                var days = CDateDataHelper.TypeYear[GetYearType(tempYear)];
                 if (tempTimeStamp < days)
                     return tempTimeStamp;
                 tempTimeStamp -= days;
@@ -242,7 +229,7 @@ namespace Lab5_1
                 if (month == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
                     subDays = 29;
                 else
-                    subDays = dayInMonth[month];
+                    subDays = CDateDataHelper.DayInMonth[month];
                 if (tempDays < subDays)
                     return (ushort)tempDays;
                 tempDays -= subDays;
@@ -251,6 +238,7 @@ namespace Lab5_1
             return 0;
         }
 
+        //Убрать цикл
         private ulong GetDaysBeforeMonth(Month month, ushort year)
         {
             ulong result = 0;
@@ -260,54 +248,22 @@ namespace Lab5_1
                 if (currMonth == Month.FEBRUARY && GetYearType(year) == YearType.LEAP)
                     result += 29;
                 else
-                    result += (ushort)dayInMonth[currMonth];
+                    result += (ushort)CDateDataHelper.DayInMonth[currMonth];
                 currMonth++;
             }
             return result;
         }
+        //аналогично
         private ulong GetDaysBeforeYear(ushort year)
         {
             ulong result = 0;
-            ushort currYear = startYear;
+            ushort currYear = CDateDataHelper.StartYear;
             while (currYear != year)
             {
-                result += typeYear[GetYearType(currYear)];
+                result += CDateDataHelper.TypeYear[GetYearType(currYear)];
                 currYear++;
             }
             return result;
         }
-    }
-
-    public enum Month
-    {
-        JANUARY = 1, 
-        FEBRUARY = 2,
-        MARCH = 3,
-        APRIL = 4,
-        MAY = 5, 
-        JUNE = 6, 
-        JULY = 7,
-        AUGUST = 8, 
-        SEPTEMBER = 9,
-        OCTOBER = 10,
-        NOVEMBER = 11,
-        DECEMBER = 12
-    }
-
-    public enum WeekDay
-    {
-        SUNDAY = 0,
-        MONDAY = 1,
-        TUESDAY = 2,
-        WEDNESDAY = 3,
-        THURSDAY = 4, 
-        FRIDAY = 5,
-        SATURDAY = 6
-    }
-
-    public enum YearType
-    {
-        NOT_LEAP,
-        LEAP
     }
 }

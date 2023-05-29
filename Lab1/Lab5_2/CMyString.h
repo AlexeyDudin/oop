@@ -44,9 +44,9 @@ public:
 	// очистка строки (строка становится снова нулевой длины)
 	void Clear();
 private:
-	PMyCharacter startPtr;
+	char* startPtr;
 	unsigned long count;
 
-	void InitializeByLenght(unsigned long lenght);
+	void InitializeByLenght(size_t lenght);
 	void FillMyCharacter(const char* pString);
 };

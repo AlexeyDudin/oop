@@ -19,7 +19,7 @@ namespace Lab5_1Test
         [TestCase((ushort)29, Month.FEBRUARY, (ushort)2000)]
         public void DateManyParams_OK(ushort day, Month month, ushort year)
         {
-            ICalendar date = new CDate(day, month, year);
+            CDate date = new CDate(day, month, year);
 
             Assert.AreEqual(day, date.GetDay());
             Assert.AreEqual(month, date.GetMonth());
@@ -45,6 +45,7 @@ namespace Lab5_1Test
         [TestCase((ulong)59, (ushort)1, Month.MARCH, (ushort)1970)]
         [TestCase((ulong)59, (ushort)1, Month.MARCH, (ushort)1970)]
         [TestCase((ulong)11016, (ushort)29, Month.FEBRUARY, (ushort)2000)]
+        [TestCase((ulong)2932896, (ushort)31, Month.DECEMBER, (ushort)9999)]
         public void DateFromTimestamp_OK(ulong timeStamp, ushort expectedDay, Month expectedMonth, ushort expectedYear)
         {
             CDate date = new CDate(timeStamp);
@@ -131,11 +132,29 @@ namespace Lab5_1Test
 
         [Test]
         [TestCase((ulong)1, (ulong)0)]
+        public void OperatorLessTests_Bad(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsFalse(dateFirst < dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)1, (ulong)0)]
         public void OperatorMoreTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
         {
             CDate dateFirst = new CDate(firstTimeStamp);
             CDate dateSecond = new CDate(secondTimeStamp);
             Assert.IsTrue(dateFirst > dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        public void OperatorMoreTests_Bad(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsFalse(dateFirst > dateSecond);
         }
 
         [Test]
@@ -150,12 +169,30 @@ namespace Lab5_1Test
 
         [Test]
         [TestCase((ulong)1, (ulong)0)]
+        public void OperatorLessOrEqualTests_Bad(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsFalse(dateFirst <= dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)1, (ulong)0)]
         [TestCase((ulong)1, (ulong)1)]
         public void OperatorMoreOrEqualTests_Ok(ulong firstTimeStamp, ulong secondTimeStamp)
         {
             CDate dateFirst = new CDate(firstTimeStamp);
             CDate dateSecond = new CDate(secondTimeStamp);
             Assert.IsTrue(dateFirst >= dateSecond);
+        }
+
+        [Test]
+        [TestCase((ulong)0, (ulong)1)]
+        public void OperatorMoreOrEqualTests_Bad(ulong firstTimeStamp, ulong secondTimeStamp)
+        {
+            CDate dateFirst = new CDate(firstTimeStamp);
+            CDate dateSecond = new CDate(secondTimeStamp);
+            Assert.IsFalse(dateFirst >= dateSecond);
         }
 
         [Test]
@@ -176,6 +213,16 @@ namespace Lab5_1Test
         {
             CDate dateFirst = (CDate)stringDate;
             Assert.AreEqual(expectedTimestamp, dateFirst.GetTimeStamp());
+        }
+
+        //Тесты на негатив
+        [Test]
+        [TestCase("01")]
+        [TestCase("0a.01.1970")]
+        public void ConsoleReaderTests_Bad(string stringDate)
+        {
+            CDate dateFirst = (CDate)stringDate;
+            Assert.IsFalse(dateFirst.IsValid());
         }
     }
 }

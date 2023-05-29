@@ -128,7 +128,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CMyString.h" />
-    <ClInclude Include="MyCharacterStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMyString.cpp" />
